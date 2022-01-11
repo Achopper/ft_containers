@@ -1,8 +1,9 @@
 #include <memory>
 #include <vector>
 
+
 namespace ft {
-	template <class T, class Allocator = std::allocator<T>>
+	template <class T, class Allocator = std::allocator<T> >
 	class vector {
 	public:
 		typedef	std::size_t													size_type;
@@ -13,10 +14,10 @@ namespace ft {
 		typedef T															value_type;
 		typedef	value_type&													reference;
 		typedef const value_type& 											const_reference;
-		typedef typename std::vector<value_type>::iterator					iterator;
-		typedef typename std::vector<const value_type>::const_iterator		const_iterator;
-		typedef std::reverse_iterator<iterator>								reverse_iterator;
-		typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
+		//typedef typename std::vector<value_type>::iterator					iterator;
+		//typedef typename std::vector<const value_type>::const_iterator		const_iterator;
+		//typedef std::reverse_iterator<iterator>								reverse_iterator;
+		//typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
 	
 	private:
 		size_type															_size;
@@ -33,12 +34,14 @@ namespace ft {
 				_allocator(allocator)
 		{};
 
-		explicit vector(size_typen n, const value_type& val = value_type, const allocator_type& allocator = allocator_type())
+		explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& allocator = allocator_type())
 			:	_size(n),
 				_capacity(n),
-				_allocatot(allocator)
+				_allocator(allocator)
 		{
-			//....
+			_first = _allocator.allocate(n)
+				for (int i = 0; i < n; ++i)
+					_allocator.construct(_first + i, val);
 		}
 
 
