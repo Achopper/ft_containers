@@ -28,15 +28,16 @@ namespace ft {
 	public:
 		explicit vector(const allocator_type& allocator = allocator_type()) 
 			:	_size(0),
-				_capasity(0),
+				_capacity(0),
 				_first(0),
 				_allocator(allocator)
 		{};
 
-		explicit vector(size_typen n, const value_type& val = value_type, const allocator_type& allocator = allocator_type())
+		explicit vector(size_type n, const value_type& val = value_type(),
+						const allocator_type& allocator = allocator_type())
 			:	_size(n),
 				_capacity(n),
-				_allocatot(allocator)
+				_allocator(allocator)
 		{
 			//....
 		}
