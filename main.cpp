@@ -11,11 +11,27 @@
 /* ************************************************************************** */
 
 #include "vector/Vector.hpp"
-#include <vector>
+
+class A
+{
+public:
+	int a;
+	A() : a(5) {}
+};
+
+class B
+{
+public:
+	int c;
+	B(int x) : c(x) {}
+};
 
 int main()
 {
-	std::vector<int> vec(10);
-	ft::vector<int> myVec(10);
+	A a;
+	A b;
+	ft::vector<A> myVec(10);
+	ft::vector<A> myVec1(20);
+	myVec = myVec1;
 	return (0);
 }
