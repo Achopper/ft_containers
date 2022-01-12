@@ -6,7 +6,7 @@ namespace ft {
 	class vector {
 	public:
 		typedef	std::size_t													size_type;
-		std::ptrdiff_t														difference_type{};
+		typedef std::ptrdiff_t												difference_type;
 		typedef typename std::allocator_traits<Allocator>::const_pointer	const_pointer;
 		typedef typename std::allocator_traits<Allocator>::pointer			pointer;
 		typedef Allocator													allocator_type;
@@ -14,7 +14,7 @@ namespace ft {
 		typedef	value_type&													reference;
 		typedef const value_type& 											const_reference;
 		typedef typename std::vector<value_type>::iterator					iterator;
-		typedef typename std::vector<const value_type>::const_iterator		const_iterator;
+		typedef typename std::vector<value_type>::const_iterator			const_iterator;
 		typedef std::reverse_iterator<iterator>								reverse_iterator;
 		typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
 
@@ -56,6 +56,13 @@ namespace ft {
 			*this = obj;
 		}
 
+		~vector()
+		{
+			for (int i = 0; i < _size; ++i)
+				_allocator.destroy(_arr + i);
+			_allocator.deallocate(_arr, _capacity);
+		}
+
 		vector & operator=(const vector& obj)
 		{
 			if (this == &obj)
@@ -66,12 +73,27 @@ namespace ft {
 			if (_capacity != 0)
 			{
 				_allocator.deallocate(_arr, _capacity);
-				_capacity = _size;
-				_allocator.allocate(_capacity);
+				_arr = _allocator.allocate(obj._capacity);
 			}
+			_capacity = _size;
 			for (int i = 0; i < _size; ++i)
 				_allocator.construct(_arr + i, obj._arr[i]);
 			return (*this);
+		}
+
+		size_type capacity() const
+		{
+			return (_capacity);
+		}
+
+		size_type size() const
+		{
+			return (_size);
+		}
+
+		size_type max_size() const
+		{
+			return (_allocator.max_size());
 		}
 	};
 }

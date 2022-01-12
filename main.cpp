@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vector/Vector.hpp"
+#include <iostream>
 
 class A
 {
@@ -30,8 +31,13 @@ int main()
 {
 	A a;
 	A b;
+	b.a = 15;
 	ft::vector<A> myVec(10);
-	ft::vector<A> myVec1(20);
+	ft::vector<A> myVec1(20, b);
 	myVec = myVec1;
+	std::vector<int> vec(200, 10);
+	std::cout << vec.size() << " " << vec.capacity() << std::endl;
+	vec.push_back(20);
+	std::cout << vec.size() << " " << vec.capacity() << " " << myVec.max_size() << std::endl;
 	return (0);
 }
