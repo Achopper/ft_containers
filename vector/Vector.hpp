@@ -1,8 +1,9 @@
 #include <memory>
 #include <vector>
 
+
 namespace ft {
-	template <class T, class Allocator = std::allocator<T>>
+	template <class T, class Allocator = std::allocator<T> >
 	class vector {
 	public:
 		typedef	std::size_t													size_type;
@@ -32,6 +33,7 @@ namespace ft {
 			  _arr(0),
 			  _allocator(allocator)
 		{};
+
 
 		explicit vector(size_type n, const value_type& val = value_type(),
 						const allocator_type& allocator = allocator_type())

@@ -36,9 +36,14 @@ cmake-build-debug
 CMakeLists.txt
 .idea
 
+<<<<<<< HEAD
 #vs code files
 .vs
 Debug/
+=======
+# VS files
+.vs
+Debug
 ft_containers.sln
 ft_containers.vcxproj
 ft_containers.vcxproj.filters
@@ -46,3 +51,4 @@ ft_containers.vcxproj.user
 packages.config
 packages 
 x64/
+a.exe
