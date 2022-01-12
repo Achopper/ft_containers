@@ -34,10 +34,21 @@ int main()
 	b.a = 15;
 	ft::vector<A> myVec(10);
 	ft::vector<A> myVec1(20, b);
+	myVec.swap(myVec1);
 	myVec = myVec1;
-	std::vector<int> vec(200, 10);
+	myVec.reserve(50);
+	std::cout << myVec.size() << " " << myVec.capacity() << std::endl;
+	std::vector<int> vec(2, 10);
 	std::cout << vec.size() << " " << vec.capacity() << std::endl;
 	vec.push_back(20);
 	std::cout << vec.size() << " " << vec.capacity() << " " << myVec.max_size() << std::endl;
+	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+		std::cout << *it << " ";
+	std::cout << std::endl << vec.capacity() << std::endl;
+	vec.reserve(50);
+	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+		std::cout << *it << " ";
+	std::cout << std::endl << vec.capacity() << std::endl;
+
 	return (0);
 }

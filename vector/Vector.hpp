@@ -1,5 +1,9 @@
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 #include <memory>
 #include <vector>
+#include <iostream>
+
 
 
 namespace ft {
@@ -9,7 +13,7 @@ namespace ft {
 		typedef	std::size_t													size_type;
 		typedef std::ptrdiff_t												difference_type;
 		typedef typename std::allocator_traits<Allocator>::const_pointer	const_pointer;
-		typedef typename std::allocator_traits<Allocator>::pointer			pointer;
+		typedef typename Allocator::pointer									pointer;
 		typedef Allocator													allocator_type;
 		typedef T															value_type;
 		typedef	value_type&													reference;
@@ -22,15 +26,15 @@ namespace ft {
 	private:
 		size_type															_size;
 		size_type															_capacity;
-		pointer																_arr;
+		pointer																_data;
 		allocator_type														_allocator;
 
-		//contructors
+		//CONSTRUCTORS--------------------------------------------------------------------------------------------------
 	public:
 		explicit vector(const allocator_type& allocator = allocator_type())
 			: _size(0),
 			  _capacity(0),
-			  _arr(0),
+			  _data(0),
 			  _allocator(allocator)
 		{};
 
@@ -41,9 +45,15 @@ namespace ft {
 				_capacity(n),
 				_allocator(allocator)
 		{
-			_arr = _allocator.allocate(n);
+			try
+			{
+				_data = _allocator.allocate(n);
+			} catch (std::bad_alloc &ex)
+			{
+				std::cout << ex.what();
+			}
 			for (int i = 0; i < n; ++i)
-				_allocator.construct(_arr + i, val);
+				_allocator.construct(_data + i, val);
 		}
 
 //		template <class InputIterator>
@@ -57,32 +67,38 @@ namespace ft {
 		{
 			*this = obj;
 		}
-
+		//DESTRUCTOR----------------------------------------------------------------------------------------------------
 		~vector()
 		{
 			for (int i = 0; i < _size; ++i)
-				_allocator.destroy(_arr + i);
-			_allocator.deallocate(_arr, _capacity);
+				_allocator.destroy(_data + i);
+			_allocator.deallocate(_data, _capacity);
 		}
-
+		//OPERATORS-----------------------------------------------------------------------------------------------------
 		vector & operator=(const vector& obj)
 		{
 			if (this == &obj)
 				return (*this);
 			for (int i = 0; i < _size; ++i)
-				_allocator.destroy(_arr + i);
+				_allocator.destroy(_data + i);
 			_size = obj._size;
 			if (_capacity != 0)
 			{
-				_allocator.deallocate(_arr, _capacity);
-				_arr = _allocator.allocate(obj._capacity);
+				_allocator.deallocate(_data, _capacity);
+				try
+				{
+					_data = _allocator.allocate(obj._capacity);
+				} catch (std::bad_alloc &ex)
+				{
+					std::cout << ex.what();
+				}
 			}
 			_capacity = _size;
 			for (int i = 0; i < _size; ++i)
-				_allocator.construct(_arr + i, obj._arr[i]);
+				_allocator.construct(_data + i, obj._data[i]);
 			return (*this);
 		}
-
+		//CAPACITY------------------------------------------------------------------------------------------------------
 		size_type capacity() const
 		{
 			return (_capacity);
@@ -97,5 +113,52 @@ namespace ft {
 		{
 			return (_allocator.max_size());
 		}
+
+		bool empty() const
+		{
+			return (_size == 0);
+		}
+
+		void reserve(size_type n)
+		{
+			if (_capacity <= n)
+			{
+				if (n > max_size())
+					throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
+				vector<value_type> tmp(0);
+				try
+				{
+					tmp._data = tmp._allocator.allocate(n);
+				} catch (std::bad_alloc &ex)
+				{
+					std::cout << ex.what();
+				}
+				tmp._capacity = n;
+				for (int i = 0; i < _size; ++i)
+					_allocator.construct(tmp._data + i, _data[i]);
+				tmp._size = _size;
+				swap(tmp);
+			}
+		}
+
+		//MODIFIERS-----------------------------------------------------------------------------------------------------
+
+		void swap(vector& obj)
+		{
+			std::swap(_allocator, obj._allocator);
+			std::swap(_capacity, obj._capacity);
+			std::swap(_size, obj._size);
+			std::swap(_data, obj._data);
+		}
 	};
 }
+
+
+template<class T, class Allocator>
+void swap(ft::vector<T, Allocator> &lhs, ft::vector<T, Allocator> &rhs)
+{
+	lhs.swap(rhs);
+}
+
+
+#endif
