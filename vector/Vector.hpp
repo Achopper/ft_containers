@@ -13,7 +13,7 @@ namespace ft {
 		typedef	std::size_t													size_type;
 		typedef std::ptrdiff_t												difference_type;
 		typedef typename std::allocator_traits<Allocator>::const_pointer	const_pointer;
-		typedef typename Allocator::pointer									pointer;
+		typedef typename std::allocator_traits<Allocator>::pointer			pointer;
 		typedef Allocator													allocator_type;
 		typedef T															value_type;
 		typedef	value_type&													reference;
@@ -141,7 +141,25 @@ namespace ft {
 			}
 		}
 
+		void resize (size_type n, value_type val = value_type())
+		{
+			if (n > max_size() || n < 0)
+				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds not supported size");
+			if (n < _size)
+			{
+				for (int i = 0; i < n; ++i)
+					_allocator.destroy(_data + i);
+				_size = n;
+			}
+			//..
+		}
+
 		//MODIFIERS-----------------------------------------------------------------------------------------------------
+
+		void push_back (const value_type& val)
+		{
+
+		}
 
 		void swap(vector& obj)
 		{
