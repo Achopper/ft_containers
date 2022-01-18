@@ -52,7 +52,7 @@ namespace ft {
 			{
 				std::cout << ex.what();
 			}
-			for (int i = 0; i < n; ++i)
+			for (size_type i = 0; i < n; ++i)
 				_allocator.construct(_data + i, val);
 		}
 
@@ -70,16 +70,17 @@ namespace ft {
 		//DESTRUCTOR----------------------------------------------------------------------------------------------------
 		~vector()
 		{
-			for (int i = 0; i < _size; ++i)
+			for (size_type i = 0; i <= _size; ++i)
 				_allocator.destroy(_data + i);
-			_allocator.deallocate(_data, _capacity);
+			if (_capacity)
+				_allocator.deallocate(_data, _capacity);
 		}
 		//OPERATORS-----------------------------------------------------------------------------------------------------
 		vector & operator=(const vector& obj)
 		{
 			if (this == &obj)
 				return (*this);
-			for (int i = 0; i < _size; ++i)
+			for (size_type i = 0; i < _size; ++i)
 				_allocator.destroy(_data + i);
 			_size = obj._size;
 			if (_capacity != 0)
@@ -94,7 +95,7 @@ namespace ft {
 				}
 			}
 			_capacity = _size;
-			for (int i = 0; i < _size; ++i)
+			for (size_type i = 0; i < _size; ++i)
 				_allocator.construct(_data + i, obj._data[i]);
 			return (*this);
 		}
@@ -134,7 +135,7 @@ namespace ft {
 					std::cout << ex.what();
 				}
 				tmp._capacity = n;
-				for (int i = 0; i < _size; ++i)
+				for (size_type i = 0; i < _size; ++i)
 					_allocator.construct(tmp._data + i, _data[i]);
 				tmp._size = _size;
 				swap(tmp);
@@ -147,18 +148,46 @@ namespace ft {
 				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds not supported size");
 			if (n < _size)
 			{
-				for (int i = 0; i < n; ++i)
+				for (size_type i = 0; i < n; ++i)
 					_allocator.destroy(_data + i);
 				_size = n;
 			}
-			//..
+			else if (n > _size)
+			{
+				if (n > _capacity)
+				{
+					try
+					{
+						reserve(_capacity * 2 > n ? _capacity * 2 : n);
+					} catch (std::exception &ex)
+					{
+						std::cout << ex.what() << std::endl;
+					}
+				}
+				for (size_type i = _size; i < n; ++i)
+				{
+					_allocator.construct(_data + i, val);
+					_size++;
+				}
+			}
 		}
 
 		//MODIFIERS-----------------------------------------------------------------------------------------------------
 
 		void push_back (const value_type& val)
 		{
-
+			if (_size >= _capacity)
+			{
+				try
+				{
+					reserve(_capacity < 1 ? ++_capacity * 2 : _capacity * 2);
+				} catch (std::exception &ex)
+				{
+					std::cout << ex.what() << std::endl;
+				}
+			}
+			_allocator.construct(_data + _size, val);
+			_size++;
 		}
 
 		void swap(vector& obj)
@@ -167,6 +196,13 @@ namespace ft {
 			std::swap(_capacity, obj._capacity);
 			std::swap(_size, obj._size);
 			std::swap(_data, obj._data);
+		}
+
+		pointer testPrint(size_type idx) const
+		{
+			if (idx > _size)
+				return NULL;
+			return &_data[idx];
 		}
 	};
 }

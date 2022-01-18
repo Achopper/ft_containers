@@ -30,25 +30,45 @@ public:
 	B(int x) : c(x) {}
 };
 
-void swapTest()
+template <class T>
+void fillVector(std::vector<T>&vec1, std::vector<T>&vec2, ft::vector<T>&myVec1, ft::vector<T>&myVec2, std::size_t size)
 {
-	std::cout << GREENCOL << "-----------------------SWAP TEST--------------------------------" << RESCOL << std::endl;
-	ft::vector<int> myVec1;
-	ft::vector<int> myVec2;
-	std::vector<int> vec1;
-	std::vector<int> vec2;
-
-	for (int i = 0; i <= 40; ++i)
+	for (std::size_t i = 0; i <= size; ++i)
 	{
 		vec1.push_back(i);
-		if (i == 40)
+		if (i == size)
 		{
-			for (int j = i; j != 0; --j)
+			for (std::size_t j = i; j != 0; --j)
 				vec2.push_back(j);
 		}
 	}
+	for (std::size_t i = 0; i <= size; ++i)
+	{
+		myVec1.push_back(i);
+		if (i == size)
+		{
+			for (std::size_t j = i; j != 0; --j)
+				myVec2.push_back(j);
+		}
+	}
+}
+
+void swapTest()
+{
+	std::cout << GREENCOL << "-----------------------SWAP TEST--------------------------------" << RESCOL << std::endl;
+	ft::vector<int> myVec1(5,10);
+	ft::vector<int> myVec2(5,10);
+	std::vector<int> vec1(5,10);
+	std::vector<int> vec2(5,10);
+
+	fillVector(vec1,vec2,myVec1,myVec2, 1);
 	std::vector<int>::iterator it1 = vec1.begin() + 10;
 	std::vector<int>::iterator it2 = vec2.begin() + 10;
+	for (std::size_t i = 0; i < myVec1.size(); ++i)
+	{
+		std::cout << *myVec1.testPrint(i) << " ";
+	}
+	std::cout << std::endl;
 	std::cout << "std::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
 	*it1 = 99;
 	*it2 = 88;
@@ -68,15 +88,8 @@ void resizeTest()
 	std::vector<int> vec1;
 	std::vector<int> vec2;
 
-	for (int i = 0; i <= 20; ++i)
-	{
-		vec1.push_back(i);
-		if (i == 20)
-		{
-			for (int j = i; j != -1; --j)
-				vec2.push_back(j);
-		}
-	}
+	//vec1.reserve(50);
+	fillVector(vec1, vec2, myVec1, myVec2, 20);
 	std::vector<int>::iterator it1 = vec1.begin();
 	std::vector<int>::iterator it2 = vec2.begin();
 
@@ -87,14 +100,27 @@ void resizeTest()
 	std::cout << std::endl <<  "data of vec2 before resize" << std::endl;
 	for (; it2 != vec2.end(); ++it2)
 		std::cout << *it2 << " ";
+	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	std::cout <<  "data of myVec1 before resize" << std::endl;
+	for (std::size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << *myVec1.testPrint(i) << " ";
 
-	std::cout << std::endl << "size and capacity of vec1 before resize " << vec1.size() << " " << vec1.capacity() << std::endl;
+	std::cout << std::endl <<  "data of myVec2 before resize" << std::endl;
+	for (std::size_t i = 0; i < myVec2.size(); ++i)
+		std::cout << *myVec2.testPrint(i) << " ";
+	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	std::cout << "size and capacity of vec1 before resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec1 before resize " << vec2.size() << " " << vec2.capacity() << std::endl;
+
+	std::cout << std::endl << "size and capacity of vec1 before resize " << myVec1.size() << " " << myVec1.capacity() << std::endl;
+	std::cout << "size and capacity of myVec2 before resize " << myVec2.size() << " " << myVec2.capacity() << std::endl;
 
 
 
 	vec1.resize(35, 50);
 	vec2.resize(35, 50);
+	myVec1.resize(35, 50);
+	myVec2.resize(35, 50);
 	it1 = vec1.begin();
 	it2 = vec2.begin();
 
@@ -105,9 +131,22 @@ void resizeTest()
 	std::cout << std::endl <<  "data of vec2 after resize" << std::endl;
 	for (; it2 != vec2.end(); ++it2)
 		std::cout << *it2 << " ";
+	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	std::cout <<  "data of myVec1 after resize" << std::endl;
+	for (std::size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << *myVec1.testPrint(i) << " ";
 
-	std::cout << std::endl << "size and capacity of vec1 after resize " << vec1.size() << " " << vec1.capacity() << std::endl;
+	std::cout << std::endl <<  "data of myVec2 after resize" << std::endl;
+	for (std::size_t i = 0; i < myVec2.size(); ++i)
+		std::cout << *myVec2.testPrint(i) << " ";
+	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	std::cout <<  "size and capacity of vec1 after resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec1 before after " << vec2.size() << " " << vec2.capacity() << std::endl;
+
+	std::cout << std::endl << "size and capacity of myVec1 after resize " << myVec1.size() << " " << myVec1.capacity() << std::endl;
+	std::cout << "size and capacity of myVec2 before after " << myVec2.size() << " " << myVec2.capacity() << std::endl;
+
+
 }
 
 int main()
@@ -119,7 +158,7 @@ int main()
 	ft::vector<A> myVec1(20, b);
 	myVec.swap(myVec1);
 	myVec = myVec1;
-	myVec.reserve(50);
+	//myVec.reserve(50);
 	std::cout << myVec.size() << " " << myVec.capacity() << std::endl;
 	std::vector<int> vec(2, 10);
 	std::cout << vec.size() << " " << vec.capacity() << std::endl;
@@ -133,7 +172,7 @@ int main()
 		std::cout << *it << " ";
 	std::cout << std::endl << vec.capacity() << std::endl;
 	swapTest();
-	resizeTest();
+	//resizeTest();
 
 	return (0);
 }
