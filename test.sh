@@ -1,1 +1,1 @@
-clang++ -Wall -Wextra -Werror vector/*.hpp main.cpp && ./a.out
+clang++ -Wall -Wextra -Werror vector/*.hpp main.cpp -fsanitize=address && ./a.out

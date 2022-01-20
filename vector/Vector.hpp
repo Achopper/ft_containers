@@ -47,7 +47,8 @@ namespace ft {
 		{
 			try
 			{
-				_data = _allocator.allocate(n);
+				if (_capacity)
+					_data = _allocator.allocate(n);
 			} catch (std::bad_alloc &ex)
 			{
 				std::cout << ex.what();
@@ -70,7 +71,7 @@ namespace ft {
 		//DESTRUCTOR----------------------------------------------------------------------------------------------------
 		~vector()
 		{
-			for (size_type i = 0; i <= _size; ++i)
+			for (size_type i = 0; i < _size; ++i)
 				_allocator.destroy(_data + i);
 			if (_capacity)
 				_allocator.deallocate(_data, _capacity);
@@ -118,6 +119,14 @@ namespace ft {
 		bool empty() const
 		{
 			return (_size == 0);
+		}
+
+		void shrink_to_fit()
+		{
+			if (_capacity > _size)
+			{
+
+			}
 		}
 
 		void reserve(size_type n)
