@@ -57,19 +57,45 @@ void fillVector(std::vector<T>&vec1, std::vector<T>&vec2, ft::vector<T>&myVec1, 
 	myVec2.push_back(0);
 }
 
-void shrinkToFitTest()
+void elemAccTest()
 {
-	std::cout << GREENCOL << "-----------------------SHRINK TEST-------------------------------" << RESCOL <<std::endl;
-	ft::vector<int> myVec1(10,7);
-	std::vector<int> vec1(10,7);
+	std::cout << GREENCOL << "-----------------------ACCESS TEST--------------------------------" << RESCOL << std::endl;
+	ft::vector<int> myVec1;
 	myVec1.reserve(20);
+	myVec1.push_back(1);
+	myVec1.push_back(2);
+	
+	std::vector<int> vec1;
 	vec1.reserve(20);
-	std::cout << "size and capacity of std::vec before shrink " << vec1.size() << " " << vec1.capacity() << std::endl <<
-	"size and capacity of ft::vec before shrink " << myVec1.size() << " " << myVec1.capacity() << std::endl;
-	vec1.shrink_to_fit();
-	myVec1.shrink_to_fit();
-	std::cout << "size and capacity of std::vec after shrink " << vec1.size() << " " << vec1.capacity() << std::endl <<
-			  "size and capacity of ft::vec after shrink " << myVec1.size() << " " << myVec1.capacity() << std::endl;
+	vec1.push_back(1);
+	vec1.push_back(2);
+
+	std::cout << "Front and back of std vector " << vec1.front() << " " << vec1.back() << std::endl <<
+		"Front and back of ft vector " << myVec1.front() << " " << myVec1.back() << std::endl <<
+		"value at index [0] and [1] of std vector " << vec1[0] << " " << vec1[1] << std::endl <<
+		"value at index [0] and [1] of ft vector " << myVec1[0] << " " << myVec1[1] << std::endl <<
+		"value at(0) and at(1) of std vector " << vec1.at(0) << " " << vec1.at(1) << std::endl <<
+		"value at(0) and at(1) of ft vector " << myVec1.at(0) << " " << myVec1.at(1) << std::endl <<
+		"now at(2) std::vec " << std::endl;
+	try
+	{
+		std::cout << vec1.at(5) << std::endl;
+	}
+	catch (std::exception &r)
+	{
+		std::cout << r.what() << std::endl;
+	}
+	std::cout << "now at(2) ft::vec " << std::endl;
+	try
+	{
+		std::cout << myVec1.at(2) << std::endl;
+	}
+		catch (std::exception& r)
+	{
+		std::cout << r.what() << std::endl;
+	}
+
+
 }
 
 void swapTest()
@@ -132,7 +158,7 @@ void resizeTest()
 		std::cout << *myVec2.testPrint(i) << " ";
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout << "size and capacity of vec1 before resize " << vec1.size() << " " << vec1.capacity() << std::endl;
-	std::cout << "size and capacity of vec1 before resize " << vec2.size() << " " << vec2.capacity() << std::endl;
+	std::cout << "size and capacity of vec2 before resize " << vec2.size() << " " << vec2.capacity() << std::endl;
 
 	std::cout << std::endl << "size and capacity of vec1 before resize " << myVec1.size() << " " << myVec1.capacity() << std::endl;
 	std::cout << "size and capacity of myVec2 before resize " << myVec2.size() << " " << myVec2.capacity() << std::endl;
@@ -184,8 +210,8 @@ int main()
 	std::cout << vec.size() << " VEC " << vec.capacity() << std::endl;
 	vec.push_back(20);
 	intVec.push_back(20);
-	std::cout << vec.size() << " " << vec.capacity() << " " << vec.max_size() << std::endl;
-	std::cout << intVec.size() << " " << intVec.capacity() << " " << intVec.max_size() << std::endl;
+	std::cout << vec.size() << " SZ " << vec.capacity() << " " << vec.max_size() << std::endl;
+	std::cout << intVec.size() << " SZ " << intVec.capacity() << " " << intVec.max_size() << std::endl;
 	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
 		std::cout << *it << " ";
 	std::cout << std::endl << vec.capacity() << std::endl;
@@ -194,6 +220,6 @@ int main()
 	std::cout << std::endl << vec.capacity() << std::endl;
 	swapTest();
 	resizeTest();
-	shrinkToFitTest();
+	elemAccTest();
 	return (0);
 }

@@ -121,14 +121,6 @@ namespace ft {
 			return (_size == 0);
 		}
 
-		void shrink_to_fit()
-		{
-			if (_capacity > _size)
-			{
-
-			}
-		}
-
 		void reserve(size_type n)
 		{
 			if (_capacity <= n)
@@ -181,6 +173,51 @@ namespace ft {
 			}
 		}
 
+		//ELEMENT ACCESS------------------------------------------------------------------------------------------------
+
+		reference operator[] (size_type n)
+		{
+			return (_data[n]);
+		}
+		const_reference operator[] (size_type n) const
+		{
+			return (_data[n]);
+		}
+
+		reference front()
+		{
+			return (_data[0]);
+		}
+
+		const_reference front() const
+		{
+			return (_data[0]);
+		}
+
+		reference back()
+		{
+			return (_data[_size - 1]);
+		}
+
+		const_reference back() const
+		{
+			return (_data[_size - 1]);
+		}
+
+		reference at(size_type n)
+		{
+			if (n >= _size)
+				throw std::out_of_range("Out of rang in at()");
+			return(_data[n]);
+		}
+
+		const_reference at(size_type n) const
+		{
+			if (n >= _size)
+				throw std::out_of_range("Out of rang in at()");
+			return(_data[n]);
+		}
+		
 		//MODIFIERS-----------------------------------------------------------------------------------------------------
 
 		void push_back (const value_type& val)
