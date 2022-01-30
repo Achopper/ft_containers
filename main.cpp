@@ -94,8 +94,6 @@ void elemAccTest()
 	{
 		std::cout << r.what() << std::endl;
 	}
-
-
 }
 
 void swapTest()
@@ -111,7 +109,7 @@ void swapTest()
 	std::vector<int>::iterator it2 = vec2.begin() + 4;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
 	{
-		std::cout << *myVec1.testPrint(i) << " ";
+		std::cout << myVec1.at(i) << " ";
 	}
 	std::cout << std::endl;
 	std::cout << "std::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
@@ -151,11 +149,11 @@ void resizeTest()
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout <<  "data of myVec1 before resize" << std::endl;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << *myVec1.testPrint(i) << " ";
+		std::cout << myVec1.at(i) << " ";
 
 	std::cout << std::endl <<  "data of myVec2 before resize" << std::endl;
 	for (std::size_t i = 0; i < myVec2.size(); ++i)
-		std::cout << *myVec2.testPrint(i) << " ";
+		std::cout << myVec1.at(i) << " ";
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout << "size and capacity of vec1 before resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec2 before resize " << vec2.size() << " " << vec2.capacity() << std::endl;
@@ -182,11 +180,11 @@ void resizeTest()
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout <<  "data of myVec1 after resize" << std::endl;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << *myVec1.testPrint(i) << " ";
+		std::cout <<myVec1.at(i) << " ";
 
 	std::cout << std::endl <<  "data of myVec2 after resize" << std::endl;
 	for (std::size_t i = 0; i < myVec2.size(); ++i)
-		std::cout << *myVec2.testPrint(i) << " ";
+		std::cout << myVec1.at(i) << " ";
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout <<  "size and capacity of vec1 after resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec1 before after " << vec2.size() << " " << vec2.capacity() << std::endl;

@@ -1,9 +1,6 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
-#include <memory>
-#include <vector>
-#include <iostream>
-
+#include "../utils/Utils.hpp"
 
 
 namespace ft {
@@ -71,8 +68,7 @@ namespace ft {
 		//DESTRUCTOR----------------------------------------------------------------------------------------------------
 		~vector()
 		{
-			for (size_type i = 0; i < _size; ++i)
-				_allocator.destroy(_data + i);
+			clear();
 			if (_capacity)
 				_allocator.deallocate(_data, _capacity);
 		}
@@ -81,8 +77,7 @@ namespace ft {
 		{
 			if (this == &obj)
 				return (*this);
-			for (size_type i = 0; i < _size; ++i)
-				_allocator.destroy(_data + i);
+			clear();
 			_size = obj._size;
 			if (_capacity != 0)
 			{
@@ -236,6 +231,19 @@ namespace ft {
 			_size++;
 		}
 
+		void pop_back()
+		{
+			_allocator.destroy(_data + (_size - 1));
+			_size--;
+		}
+
+		void clear()
+		{
+			for (size_type i = 0; i < _size; ++i)
+				_allocator.destroy(_data + i);
+			_size = 0;
+		}
+
 		void swap(vector& obj)
 		{
 			std::swap(_allocator, obj._allocator);
@@ -244,12 +252,6 @@ namespace ft {
 			std::swap(_data, obj._data);
 		}
 
-		pointer testPrint(size_type idx) const
-		{
-			if (idx > _size)
-				return NULL;
-			return &_data[idx];
-		}
 	};
 }
 
