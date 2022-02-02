@@ -3,44 +3,46 @@
 #include "../utils/Utils.hpp"
 
 
-namespace ft {
-	template <class T, class Allocator = std::allocator<T> >
-	class vector {
+namespace ft
+{
+	template<class T, class Allocator = std::allocator<T> >
+	class vector
+	{
 	public:
-		typedef	std::size_t													size_type;
-		typedef std::ptrdiff_t												difference_type;
-		typedef typename std::allocator_traits<Allocator>::const_pointer	const_pointer;
-		typedef typename std::allocator_traits<Allocator>::pointer			pointer;
-		typedef Allocator													allocator_type;
-		typedef T															value_type;
-		typedef	value_type&													reference;
-		typedef const value_type& 											const_reference;
-		typedef typename std::vector<value_type>::iterator					iterator;
-		typedef typename std::vector<value_type>::const_iterator			const_iterator;
-		typedef std::reverse_iterator<iterator>								reverse_iterator;
-		typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
+		typedef std::size_t size_type;
+		typedef std::ptrdiff_t difference_type;
+		typedef typename Allocator::const_pointer const_pointer;
+		typedef typename Allocator::pointer pointer;
+		typedef Allocator allocator_type;
+		typedef T value_type;
+		typedef value_type &reference;
+		typedef const value_type &const_reference;
+		typedef typename std::vector<value_type>::iterator iterator;
+		typedef typename std::vector<value_type>::const_iterator const_iterator;
+		typedef std::reverse_iterator<iterator> reverse_iterator;
+		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	private:
-		size_type															_size;
-		size_type															_capacity;
-		pointer																_data;
-		allocator_type														_allocator;
+		size_type _size;
+		size_type _capacity;
+		pointer _data;
+		allocator_type _allocator;
 
 		//CONSTRUCTORS--------------------------------------------------------------------------------------------------
 	public:
-		explicit vector(const allocator_type& allocator = allocator_type())
-			: _size(0),
-			  _capacity(0),
-			  _data(0),
-			  _allocator(allocator)
+		explicit vector(const allocator_type &allocator = allocator_type())
+				: _size(0),
+				  _capacity(0),
+				  _data(0),
+				  _allocator(allocator)
 		{};
 
 
-		explicit vector(size_type n, const value_type& val = value_type(),
-						const allocator_type& allocator = allocator_type())
-			:	_size(n),
-				_capacity(n),
-				_allocator(allocator)
+		explicit vector(size_type n, const value_type &val = value_type(),
+						const allocator_type &allocator = allocator_type())
+				: _size(n),
+				  _capacity(n),
+				  _allocator(allocator)
 		{
 			try
 			{
@@ -61,10 +63,11 @@ namespace ft {
 //				SFINAE
 //		}
 
-		vector(const vector& obj)
+		vector(const vector &obj)
 		{
 			*this = obj;
 		}
+
 		//DESTRUCTOR----------------------------------------------------------------------------------------------------
 		~vector()
 		{
@@ -72,8 +75,9 @@ namespace ft {
 			if (_capacity)
 				_allocator.deallocate(_data, _capacity);
 		}
+
 		//OPERATORS-----------------------------------------------------------------------------------------------------
-		vector & operator=(const vector& obj)
+		vector &operator=(const vector &obj)
 		{
 			if (this == &obj)
 				return (*this);
@@ -95,6 +99,7 @@ namespace ft {
 				_allocator.construct(_data + i, obj._data[i]);
 			return (*this);
 		}
+
 		//CAPACITY------------------------------------------------------------------------------------------------------
 		size_type capacity() const
 		{
@@ -138,7 +143,7 @@ namespace ft {
 			}
 		}
 
-		void resize (size_type n, value_type val = value_type())
+		void resize(size_type n, value_type val = value_type())
 		{
 			if (n > max_size() || n < 0)
 				throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds not supported size");
@@ -170,11 +175,12 @@ namespace ft {
 
 		//ELEMENT ACCESS------------------------------------------------------------------------------------------------
 
-		reference operator[] (size_type n)
+		reference operator[](size_type n)
 		{
 			return (_data[n]);
 		}
-		const_reference operator[] (size_type n) const
+
+		const_reference operator[](size_type n) const
 		{
 			return (_data[n]);
 		}
@@ -203,19 +209,19 @@ namespace ft {
 		{
 			if (n >= _size)
 				throw std::out_of_range("Out of rang in at()");
-			return(_data[n]);
+			return (_data[n]);
 		}
 
 		const_reference at(size_type n) const
 		{
 			if (n >= _size)
 				throw std::out_of_range("Out of rang in at()");
-			return(_data[n]);
+			return (_data[n]);
 		}
-		
+
 		//MODIFIERS-----------------------------------------------------------------------------------------------------
 
-		void push_back (const value_type& val)
+		void push_back(const value_type &val)
 		{
 			if (_size >= _capacity)
 			{
@@ -244,7 +250,7 @@ namespace ft {
 			_size = 0;
 		}
 
-		void swap(vector& obj)
+		void swap(vector &obj)
 		{
 			std::swap(_allocator, obj._allocator);
 			std::swap(_capacity, obj._capacity);
@@ -253,14 +259,11 @@ namespace ft {
 		}
 
 	};
+//TODO binary operators + - = ...
+	template<class T, class Allocator>
+	void swap(ft::vector<T, Allocator> &lhs, ft::vector<T, Allocator> &rhs)
+	{
+		lhs.swap(rhs);
+	}
 }
-
-
-template<class T, class Allocator>
-void swap(ft::vector<T, Allocator> &lhs, ft::vector<T, Allocator> &rhs)
-{
-	lhs.swap(rhs);
-}
-
-
 #endif
