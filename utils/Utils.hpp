@@ -34,11 +34,12 @@ namespace ft {
 		typedef integral_constant<T, v> 	type;
 		static const value_type value = 	v;
 
-		explicit operator value_type() const
+		operator value_type() const
 		{
 			return (value);
 		}
 	};
+
 	typedef integral_constant<bool, true> true_type;
 	typedef integral_constant<bool, false> false_type ;
 
@@ -58,35 +59,50 @@ namespace ft {
 class random_access_terator_tag {};
 
 template<class Iterator>
-		class iterator_traits
+		struct iterator_traits
 	{
 			typedef typename Iterator::difference_type		difference_type;
 			typedef typename Iterator::pointer				pointer;
 			typedef typename Iterator::reference			reference;
+	//		typedef typename Iterator::const_pointer		const_pointer;
+		//	typedef typename Iterator::const_reference		const_reference;
 			typedef typename Iterator::value_type			value_type;
 			typedef typename Iterator::iterator_category	iterator_category;
 	};
 
 template <class T>
-		class iterator_traits<T*>
+		struct iterator_traits<T*>
 	{
-			std::ptrdiff_t 									difference_type;
-			T												value_type;
-			T*												pointer;
-			T&												reference;
-			typedef random_access_terator_tag				iterator_category;
+			typedef std::ptrdiff_t 									difference_type;
+			typedef T												value_type;
+			typedef T*												pointer;
+		//	typedef const T*										const_pointer;
+			typedef T&												reference;
+		//	typedef const T&										const_reference;
+			typedef  random_access_terator_tag						iterator_category;
 	};
 
 template <class T>
-		class iterator_traits<const T*>
+		struct iterator_traits<const T*>
 	{
-			std::ptrdiff_t 									difference_type;
-			T												value_type;
-			T*												pointer;
-			T&												reference;
-			typedef random_access_terator_tag				iterator_category;
+			typedef std::ptrdiff_t 									difference_type;
+			typedef T												value_type;
+		//	typedef const T*										const_pointer;
+			typedef 	T&											reference;
+	//		typedef const T&										const_reference;
+			typedef random_access_terator_tag						iterator_category;
 	};
-
+	template <class InputIter>
+	typename ft::iterator_traits<InputIter>::difference_type distance(InputIter first, InputIter last)
+	{
+		typename ft::iterator_traits<InputIter>::difference_type res = 0;
+		while (first != last)
+		{
+			first++;
+			res++;
+		}
+		return (res);
+	}
 }
 
 #endif

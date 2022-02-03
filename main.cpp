@@ -31,6 +31,26 @@ public:
 };
 
 template <class T>
+void printVec(std::vector<T>&vec1, ft::vector<T>&myVec1)
+{
+	for (std::size_t i = 0; i <= vec1.size() - 1; ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout << std::endl;
+	for (std::size_t i = 0; i <= myVec1.size() - 1; ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout << std::endl;
+}
+
+template <class T>
+void fillVector(std::vector<T>&vec1, ft::vector<T>&myVec1, std::size_t size)
+{
+	for (std::size_t i = 0; i <= size; ++i)
+		vec1.push_back(i);
+	for (std::size_t i = 0; i <= size; ++i)
+		myVec1.push_back(i);
+}
+
+template <class T>
 void fillVector(std::vector<T>&vec1, std::vector<T>&vec2, ft::vector<T>&myVec1, ft::vector<T>&myVec2, std::size_t size)
 {
 	for (std::size_t i = 0; i <= size; ++i)
@@ -138,7 +158,7 @@ void resizeTest()
 	fillVector(vec1, vec2, myVec1, myVec2, 20);
 	std::vector<int>::iterator it1 = vec1.begin();
 	std::vector<int>::iterator it2 = vec2.begin();
-
+	std::cout << GREENCOL << "[" << *it1 << "]" << RESCOL << std::endl;
 	std::cout << "data of vec1 before resize" << std::endl;
 	for (; it1 != vec1.end(); ++it1)
 		std::cout << *it1 << " ";
@@ -146,6 +166,7 @@ void resizeTest()
 	std::cout << std::endl <<  "data of vec2 before resize" << std::endl;
 	for (; it2 != vec2.end(); ++it2)
 		std::cout << *it2 << " ";
+
 	std::cout << std::endl << "------------------------------------------------" << std::endl;
 	std::cout <<  "data of myVec1 before resize" << std::endl;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
@@ -193,6 +214,31 @@ void resizeTest()
 	std::cout << "size and capacity of myVec2 before after " << myVec2.size() << " " << myVec2.capacity() << std::endl;
 }
 
+void rangeTest()
+{
+	std::cout << GREENCOL << "-----------------------RANGE TEST-------------------------------" << RESCOL << std::endl;
+	ft::vector<int> myVec1;
+	myVec1.reserve(20);
+
+	std::vector<int> vec1;
+	vec1.reserve(20);
+	fillVector(vec1, myVec1, 10);
+	std::vector<int>::iterator bIt = vec1.begin(), eIt = vec1.end();
+	ft::vector<int>::iterator bMIt = myVec1.begin(), eMI = myVec1.end();
+
+	std::vector<int> vec2(bIt, eIt);
+	ft::vector<int> myVec2(eIt, bIt);
+	printVec(vec2, myVec2);
+	std::cout << GREENCOL << "-----------------------for(iterator) TEST------------------------" << RESCOL << std::endl;
+	for ( std::vector<int>::iterator it = vec1.begin(); it < vec1.end(); ++it)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	for ( ft::vector<int>::iterator it = myVec1.begin(); it < myVec1.end(); ++it)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+
+}
+
 int main()
 {
 	A a;
@@ -219,5 +265,6 @@ int main()
 	swapTest();
 	resizeTest();
 	elemAccTest();
+	rangeTest();
 	return (0);
 }

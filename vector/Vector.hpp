@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include "../utils/Utils.hpp"
+#include "../iterators/RandomAccessIterator.hpp"
 
 
 namespace ft
@@ -9,24 +10,24 @@ namespace ft
 	class vector
 	{
 	public:
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
-		typedef typename Allocator::const_pointer const_pointer;
-		typedef typename Allocator::pointer pointer;
-		typedef Allocator allocator_type;
-		typedef T value_type;
-		typedef value_type &reference;
-		typedef const value_type &const_reference;
-		typedef typename std::vector<value_type>::iterator iterator;
-		typedef typename std::vector<value_type>::const_iterator const_iterator;
-		typedef std::reverse_iterator<iterator> reverse_iterator;
+		typedef 									std::size_t size_type;
+		typedef 									std::ptrdiff_t difference_type;
+		typedef typename Allocator::const_pointer 	const_pointer;
+		typedef typename Allocator::pointer 		pointer;
+		typedef Allocator 							allocator_type;
+		typedef T 									value_type;
+		typedef value_type&							reference;
+		typedef const value_type&					const_reference;
+		typedef  random_access_iterator<value_type> iterator;
+		typedef  random_access_iterator<value_type> const_iterator;
+		typedef std::reverse_iterator<iterator> 	reverse_iterator; //TODO make rev_it
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	private:
-		size_type _size;
-		size_type _capacity;
-		pointer _data;
-		allocator_type _allocator;
+		size_type 							_size;
+		size_type 							_capacity;
+		pointer 							_data;
+		allocator_type 						_allocator;
 
 		//CONSTRUCTORS--------------------------------------------------------------------------------------------------
 	public:
@@ -56,12 +57,19 @@ namespace ft
 				_allocator.construct(_data + i, val);
 		}
 
-//		template <class InputIterator>
-//		vector (InputIterator first, InputIterator last,
-//				const allocator_type& alloc = allocator_type()) : _allocator(alloc)
-//		{
-//				SFINAE
-//		}
+		template <class InputIterator>
+		vector (InputIterator first, InputIterator last,
+				const allocator_type& alloc = allocator_type()
+						,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _allocator(alloc)
+		{
+			if (first > last)
+				throw (std::length_error("Vector"));
+			_size = ft::distance(first, last);
+			_data = _allocator.allocate(_size);
+			_capacity = _size;
+			for (size_type i = 0; i < _size; ++i)
+				_allocator.construct(_data + i, *(first + i));
+		}
 
 		vector(const vector &obj)
 		{
@@ -98,6 +106,46 @@ namespace ft
 			for (size_type i = 0; i < _size; ++i)
 				_allocator.construct(_data + i, obj._data[i]);
 			return (*this);
+		}
+		//ITERATOR------------------------------------------------------------------------------------------------------
+		iterator begin()
+		{
+			return (iterator(_data));
+		}
+
+		const_iterator begin() const
+		{
+			return (const_iterator(_data));
+		}
+
+		iterator end()
+		{
+			return (iterator(_data + _size));
+		}
+
+		const_iterator end() const
+		{
+			return (const_iterator(_data + _size));
+		}
+
+		reverse_iterator rbegin()
+		{
+			return (reverse_iterator(end()));
+		}
+
+		const_reverse_iterator rbegin() const
+		{
+			return (const_reverse_iterator(end()));
+		}
+
+		reverse_iterator rend()
+		{
+			return (reverse_iterator(begin()));
+		}
+
+		const_reverse_iterator rend() const
+		{
+			return (const_reverse_iterator(begin()));
 		}
 
 		//CAPACITY------------------------------------------------------------------------------------------------------
@@ -159,7 +207,7 @@ namespace ft
 				{
 					try
 					{
-						reserve(_capacity * 2 > n ? _capacity * 2 : n);
+						reserve(_capacity << 2 > n ? _capacity << 2 : n);
 					} catch (std::exception &ex)
 					{
 						std::cout << ex.what() << std::endl;
@@ -227,7 +275,7 @@ namespace ft
 			{
 				try
 				{
-					reserve(_capacity < 1 ? ++_capacity * 2 : _capacity * 2);
+					reserve(_capacity < 1 ? ++_capacity << 2 : _capacity << 2);
 				} catch (std::exception &ex)
 				{
 					std::cout << ex.what() << std::endl;
