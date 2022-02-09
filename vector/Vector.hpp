@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Vector.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achopper <achopper@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/09 20:15:13 by achopper          #+#    #+#             */
+/*   Updated: 2022/02/09 20:15:13 by achopper         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include "../utils/Utils.hpp"
@@ -305,6 +317,53 @@ namespace ft
 			std::swap(_size, obj._size);
 			std::swap(_data, obj._data);
 		}
+
+//		iterator insert (iterator position, const value_type& val)
+//		{
+//			if (position < begin() || position > end())
+//				throw std::logic_error("Vector: in insert");
+//
+//		}
+//
+		void insert(iterator position, size_type n, const value_type& val)
+		{
+			if (n > max_size())
+				throw std::length_error("Vector: in insert");
+			difference_type start = position - begin();
+			if (n == 0)
+				;
+			else if ((_size + n) > _capacity)
+			{
+				difference_type i = 0;
+				pointer newPtr;
+				size_type new_cap = (_capacity << 1) > _size + n ? _capacity << 1 : _size + n;
+				newPtr = _allocator.allocate(new_cap);
+				for (; i < start; ++i)
+					_allocator.construct(newPtr + i, _data[i]);
+				for (; i < (start + n); ++i)
+					_allocator.construct(newPtr + i, val);
+				for(; i < (_size + n); ++i)
+					_allocator.construct(newPtr + i, _data[i - n]);
+				for (size_type i = 0; i < _size; ++i)
+					_allocator.destroy(_data + i);
+				_allocator.deallocate(_data, _capacity);
+				_capacity = new_cap;
+				_size += n;
+				_data = newPtr;
+			}
+			else
+			{
+			  //TODO
+
+			}
+
+		}
+
+//		template <class InputIterator>
+//		void insert (iterator position, InputIterator first, InputIterator last)
+//		{
+//
+//		}
 
 	};
 //TODO binary operators + - = ...

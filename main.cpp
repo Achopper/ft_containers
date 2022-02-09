@@ -227,8 +227,10 @@ void rangeTest()
 	ft::vector<int>::iterator bMIt = myVec1.begin(), eMI = myVec1.end();
 
 	std::vector<int> vec2(bIt, eIt);
-	ft::vector<int> myVec2(eIt, bIt);
+	ft::vector<int> myVec2(bMIt, eMI);
 	printVec(vec2, myVec2);
+	std::cout << "std::vec cap and size " << std::endl << vec2.capacity() << " " << vec2.size() << std::endl
+	<< myVec2.capacity() << " " << myVec2.size() << std::endl;
 	std::cout << GREENCOL << "-----------------------for(iterator) TEST------------------------" << RESCOL << std::endl;
 	for ( std::vector<int>::iterator it = vec1.begin(); it < vec1.end(); ++it)
 		std::cout << *it << " ";
@@ -237,6 +239,41 @@ void rangeTest()
 		std::cout << *it << " ";
 	std::cout << std::endl;
 
+}
+
+void insertTest()
+{
+	std::cout << GREENCOL << "-----------------------INSERT TEST-------------------------------" << RESCOL << std::endl;
+	std::cout << GREENCOL << "-----------------------FILL TEST-------------------------------" << RESCOL << std::endl;
+	ft::vector<int> myVec1;
+
+	std::vector<int> vec1;
+	fillVector(vec1, myVec1, 10);
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	ft::vector<int>::iterator it = myVec1.begin() + 11;
+	std::vector<int>::iterator stdIt = vec1.begin() + 11;
+
+	vec1.insert(stdIt, 10, 7);
+	myVec1.insert(it, 10, 7);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+		 myVec1.capacity() << " " << myVec1.size() << std::endl;
 }
 
 int main()
@@ -266,5 +303,6 @@ int main()
 	resizeTest();
 	elemAccTest();
 	rangeTest();
+	insertTest();
 	return (0);
 }

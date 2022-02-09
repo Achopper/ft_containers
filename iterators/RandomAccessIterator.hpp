@@ -23,10 +23,8 @@ namespace ft
 	public:
 		typedef typename ft::iterator_traits<T*>::difference_type			difference_type;
 		typedef typename ft::iterator_traits<T*>::pointer					pointer;
-		//typedef typename ft::iterator_traits<T*>::const_pointer				const_pointer;
 		typedef typename ft::iterator_traits<T*>::value_type				value_type;
 		typedef typename ft::iterator_traits<T*>::reference					reference;
-		//typedef typename ft::iterator_traits<T*>::const_reference			const_reference;
 		typedef pointer 													iterator_type;//TODO ?
 		typedef ft::random_access_terator_tag								iterator_category;
 
@@ -35,7 +33,7 @@ namespace ft
 
 	public:
 
-		random_access_iterator() : _ptr() {}
+		random_access_iterator() : _ptr(0) {}
 
 		random_access_iterator(pointer ptr) : _ptr(ptr) {}
 
@@ -51,6 +49,10 @@ namespace ft
 
 		virtual ~random_access_iterator() {}
 
+		operator random_access_iterator <const value_type> () const {
+			return random_access_iterator<const value_type>(_ptr);
+		}
+
 		pointer base() const
 		{
 			return (_ptr);
@@ -64,6 +66,16 @@ namespace ft
 		random_access_iterator operator -(const difference_type &v) const
 		{
 			return (_ptr + (-v));
+		}
+
+		difference_type operator +(const random_access_iterator<value_type> &v) const
+		{
+			return (_ptr + v.base());
+		}
+
+		difference_type operator -(const  random_access_iterator<value_type> &v) const
+		{
+			return (_ptr - v.base());
 		}
 
 		random_access_iterator & operator +=(const difference_type &v)
