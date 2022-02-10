@@ -39,7 +39,7 @@ namespace ft
 
 		random_access_iterator(const random_access_iterator & obj) : _ptr(obj._ptr) {}
 
-		random_access_iterator const & operator=(random_access_iterator & obj)
+		random_access_iterator const& operator=(const random_access_iterator & obj)
 		{
 			if (this == &obj)
 				return (*this);

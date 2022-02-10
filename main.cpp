@@ -274,6 +274,65 @@ void insertTest()
 
 	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
 		 myVec1.capacity() << " " << myVec1.size() << std::endl;
+
+	it = myVec1.begin();
+	stdIt = vec1.begin();
+
+	vec1.insert(stdIt + 6, 10, 3);
+	myVec1.insert(it + 6, 10, 3);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+
+	std::cout << GREENCOL << "-----------------------SINGLE TEST-------------------------------" << RESCOL << std::endl;
+	myVec1.resize(10);
+	vec1.resize(10);
+
+	it = myVec1.begin() ;
+	stdIt = vec1.begin();
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+
+	stdIt =  vec1.insert(stdIt + 3,  42);
+	it = myVec1.insert(it + 3,  42);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+
+	vec1.insert(stdIt,  43);
+	myVec1.insert(it,  43);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+
 }
 
 int main()

@@ -318,17 +318,20 @@ namespace ft
 			std::swap(_data, obj._data);
 		}
 
-//		iterator insert (iterator position, const value_type& val)
-//		{
-//			if (position < begin() || position > end())
-//				throw std::logic_error("Vector: in insert");
-//
-//		}
-//
+		iterator insert (iterator position, const value_type& val)
+		{
+			if (position < begin() || position > end())
+				throw std::logic_error("Vector: in insert");
+			insert(position, 1, val);
+			return (position);
+		}
+
 		void insert(iterator position, size_type n, const value_type& val)
 		{
 			if (n > max_size())
 				throw std::length_error("Vector: in insert");
+			if (position < begin() || position > end())
+				throw std::logic_error("Vector: in insert");
 			difference_type start = position - begin();
 			if (n == 0)
 				;
@@ -337,12 +340,19 @@ namespace ft
 				difference_type i = 0;
 				pointer newPtr;
 				size_type new_cap = (_capacity << 1) > _size + n ? _capacity << 1 : _size + n;
-				newPtr = _allocator.allocate(new_cap);
+				try
+				{
+					newPtr = _allocator.allocate(new_cap);
+				}
+				catch (std::bad_alloc &ex)
+				{
+					std::cout << ex.what();
+				}
 				for (; i < start; ++i)
 					_allocator.construct(newPtr + i, _data[i]);
 				for (; i < (start + n); ++i)
 					_allocator.construct(newPtr + i, val);
-				for(; i < (_size + n); ++i)
+				for (; i < (_size + n); ++i)
 					_allocator.construct(newPtr + i, _data[i - n]);
 				for (size_type i = 0; i < _size; ++i)
 					_allocator.destroy(_data + i);
@@ -353,18 +363,24 @@ namespace ft
 			}
 			else
 			{
-			  //TODO
-
+				for (difference_type i = _size + n; i >= start + n; --i)
+					_allocator.construct(_data + i, _data[i - n]);
+				for (difference_type i = start; i < start + n; ++i)
+					_allocator.destroy(_data + i);
+				for (difference_type i = start; i < start + n; ++i)
+					_allocator.construct(_data + i, val);
+				_size += n;
 			}
-
 		}
 
-//		template <class InputIterator>
-//		void insert (iterator position, InputIterator first, InputIterator last)
-//		{
-//
-//		}
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last,
+					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+		{
+			difference_type count = std::distance(first, last);
+		}
 
+//TODO getAlocator()
 	};
 //TODO binary operators + - = ...
 	template<class T, class Allocator>
