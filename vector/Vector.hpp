@@ -14,6 +14,7 @@
 #define VECTOR_HPP
 #include "../utils/Utils.hpp"
 #include "../iterators/RandomAccessIterator.hpp"
+#include <iterator>
 
 
 namespace ft
@@ -350,9 +351,9 @@ namespace ft
 				}
 				for (; i < start; ++i)
 					_allocator.construct(newPtr + i, _data[i]);
-				for (; i < (start + n); ++i)
+				for (; i < (start + static_cast<difference_type>(n)); ++i)
 					_allocator.construct(newPtr + i, val);
-				for (; i < (_size + n); ++i)
+				for (; i < static_cast<difference_type>(_size + n); ++i)
 					_allocator.construct(newPtr + i, _data[i - n]);
 				for (size_type i = 0; i < _size; ++i)
 					_allocator.destroy(_data + i);
@@ -363,11 +364,11 @@ namespace ft
 			}
 			else
 			{
-				for (difference_type i = _size + n; i >= start + n; --i)
+				for (difference_type i = _size + n; i >= static_cast<difference_type>(start + n); --i)
 					_allocator.construct(_data + i, _data[i - n]);
-				for (difference_type i = start; i < start + n; ++i)
+				for (difference_type i = start; i < start + static_cast<difference_type>(n); ++i)
 					_allocator.destroy(_data + i);
-				for (difference_type i = start; i < start + n; ++i)
+				for (difference_type i = start; i < start + static_cast<difference_type>(n); ++i)
 					_allocator.construct(_data + i, val);
 				_size += n;
 			}
@@ -377,10 +378,73 @@ namespace ft
 		void insert (iterator position, InputIterator first, InputIterator last,
 					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		{
-			difference_type count = std::distance(first, last);
+			difference_type count = ft::distance(first, last);
+			difference_type start = position - begin();
+			if (first == last)
+				return ;
+			else if (_size + count > _capacity)
+			{
+				difference_type newCap = (_capacity << 1) > _size + count ? _capacity << 1 : _size + count;;
+				pointer newArr;
+				try
+				{
+					newArr = _allocator.allocate(newCap);
+				}
+				catch (std::bad_alloc &ex)
+				{
+					std::cout << ex.what();
+				}
+				for (difference_type i = 0; i < start; ++i)
+					_allocator.construct(newArr + i, _data[i]);
+				for (difference_type i = start; i <= (start + count); ++i, first++)
+					_allocator.construct(newArr + i, *first);
+				for (difference_type i = start + count; i < static_cast<difference_type>(_size) + count; ++i)
+					_allocator.construct(newArr + i, _data[i - count]);
+				for (size_type i = 0; i < _size; ++i)
+					_allocator.destroy(_data + i);
+				_size +=  count;
+				_allocator.deallocate(_data, _capacity);
+				_capacity = newCap;
+				_data = newArr;
+			}
+			else
+			{
+				for (difference_type i = static_cast<difference_type>(_size) + count; i >= start + count; --i)
+					_allocator.construct(_data + i, _data[i - count]);
+				for (difference_type i = start; i < count; ++i)
+					_allocator.destroy(_data + i);
+				for (difference_type i = start; i < count; ++i, first++)
+					_allocator.construct(_data + i, *first);
+				_size += count;
+			}
 		}
 
-//TODO getAlocator()
+//		template <class InputIterator>
+//		void assign (InputIterator first, InputIterator last,
+//					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+//		{
+//
+//		}
+//
+//		void assign (size_type n, const value_type& val)
+//		{
+//
+//		}
+//
+//		iterator erase (iterator position)
+//		{
+//
+//		}
+//
+//		iterator erase (iterator first, iterator last)
+//		{
+//
+//		}
+
+		allocator_type getAllocator()
+		{
+			return (_allocator);
+		}
 	};
 //TODO binary operators + - = ...
 	template<class T, class Allocator>

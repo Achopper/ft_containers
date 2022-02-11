@@ -332,6 +332,81 @@ void insertTest()
 
 	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
 			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	std::cout << "value at return iterators. my : " << *it << " std : " << *stdIt << std::endl;
+
+	std::cout << GREENCOL << "-----------------------RANGE TEST-------------------------------" << RESCOL << std::endl;
+
+	vec1.resize(10);
+	std::vector<int> ranVec;
+	ft::vector<int> myRanVec;
+	fillVector(ranVec, myRanVec, 30);
+	myVec1.resize(10);
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	std::cout  << std::endl
+	;
+	std::cout << "vector used to range values" << std::endl ;
+	for (size_t i = 0; i < ranVec.size(); ++i)
+		std::cout << ranVec.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < myRanVec.size(); ++i)
+		std::cout << myRanVec.at(i) << " ";
+	std::cout << std::endl  << std::endl;
+
+	it = myVec1.begin();
+	stdIt = vec1.begin();
+	std::vector<int>::iterator it1 = ranVec.begin();
+	std::vector<int>::iterator it2 = ranVec.begin() + 30;
+	ft::vector<int>::iterator mit1 = myRanVec.begin();
+	ft::vector<int>::iterator mit2 = myRanVec.begin() + 30;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	std::cout  << std::endl;
+
+
+	vec1.insert(stdIt, it1, it2 );
+	myVec1.insert(it, mit1, mit2);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	std::cout  << std::endl;
+
+	it = myVec1.begin();
+	stdIt = vec1.begin();
+	it1 = ranVec.begin();
+	it2 = ranVec.begin() + 10;
+	mit1 = myRanVec.begin();
+	mit2 = myRanVec.begin() + 10;
+
+	vec1.insert(stdIt, it1, it2);
+	myVec1.insert(it, mit1, mit2);
+
+	for (size_t i = 0; i < myVec1.size(); ++i)
+		std::cout << myVec1.at(i) << " ";
+	std::cout  << std::endl;
+	for (size_t i = 0; i < vec1.size(); ++i)
+		std::cout << vec1.at(i) << " ";
+	std::cout  << std::endl;
+
+	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	std::cout  << std::endl;
+
 
 }
 
