@@ -56,8 +56,8 @@ namespace ft
 						const allocator_type &allocator = allocator_type())
 				: _size(n),
 				  _capacity(n),
-				  _allocator(allocator),
-				  _data(0)
+				  _data(0),
+				  _allocator(allocator)
 		{
 			try
 			{
