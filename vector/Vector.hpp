@@ -44,7 +44,7 @@ namespace ft
 
 		//CONSTRUCTORS--------------------------------------------------------------------------------------------------
 	public:
-		explicit vector(const allocator_type &allocator = allocator_type())
+		 vector(const allocator_type &allocator = allocator_type())
 				: _size(0),
 				  _capacity(0),
 				  _data(0),
@@ -52,11 +52,12 @@ namespace ft
 		{};
 
 
-		explicit vector(size_type n, const value_type &val = value_type(),
+		 vector(size_type n, const value_type &val = value_type(),
 						const allocator_type &allocator = allocator_type())
 				: _size(n),
 				  _capacity(n),
-				  _allocator(allocator)
+				  _allocator(allocator),
+				  _data(0)
 		{
 			try
 			{
@@ -104,9 +105,10 @@ namespace ft
 				return (*this);
 			clear();
 			_size = obj._size;
-			if (_capacity != 0)
+			if (_capacity < _size)
 			{
-				_allocator.deallocate(_data, _capacity);
+				if (_capacity != 0)
+					_allocator.deallocate(_data, _capacity);
 				try
 				{
 					_data = _allocator.allocate(obj._capacity);

@@ -13,9 +13,6 @@
 #include "Vector.hpp"
 #include <iostream>
 
-#define RESCOL "\33[00m"
-#define GREENCOL "\33[32m"
-
 class A
 {
 public:
@@ -468,8 +465,6 @@ void compareTest()
 	if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 
 }
-
-
 
 int main()
 {

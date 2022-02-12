@@ -17,6 +17,9 @@
 #include <vector>
 #include <iostream>
 
+#define RESCOL "\33[00m"
+#define GREENCOL "\33[32m"
+
 namespace ft {
 //------------------------ENABLE_IF---------------------------------
 	template <bool cond, class T = void>
