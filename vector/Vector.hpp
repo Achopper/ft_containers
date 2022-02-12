@@ -288,7 +288,7 @@ namespace ft
 			{
 				try
 				{
-					reserve(_capacity < 1 ? ++_capacity << 2 : _capacity << 2);
+					reserve(_capacity < 1 ? ++_capacity << 1 : _capacity << 1);
 				} catch (std::exception &ex)
 				{
 					std::cout << ex.what() << std::endl;
@@ -378,13 +378,15 @@ namespace ft
 		void insert (iterator position, InputIterator first, InputIterator last,
 					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		{
+			if (position < begin() || position > end() || first > last || last < first)
+				throw std::logic_error("Vector: in range insert");
 			difference_type count = ft::distance(first, last);
-			difference_type start = position - begin();
+			difference_type start = ft::distance(position, begin());
 			if (first == last)
 				return ;
 			else if (_size + count > _capacity)
 			{
-				difference_type newCap = (_capacity << 1) > _size + count ? _capacity << 1 : _size + count;;
+				size_type newCap = (_capacity << 1) > _size + count ? _capacity << 1 : _size + count;;
 				pointer newArr;
 				try
 				{
@@ -419,34 +421,145 @@ namespace ft
 			}
 		}
 
-//		template <class InputIterator>
-//		void assign (InputIterator first, InputIterator last,
-//					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
-//		{
-//
-//		}
-//
-//		void assign (size_type n, const value_type& val)
-//		{
-//
-//		}
-//
-//		iterator erase (iterator position)
-//		{
-//
-//		}
-//
-//		iterator erase (iterator first, iterator last)
-//		{
-//
-//		}
+		void assign (size_type n, const value_type& val)
+		{
+			if (n > _capacity)
+			{
+				clear();
+				_allocator.deallocate(_data, _capacity);
+				_data =_allocator.allocate(n);
+				_size = n;
+				_capacity = n;
+				for (size_type i = 0; i < _size; ++i)
+					_allocator.construct(_data + i, val);
+			}
+			else
+			{
+				clear();
+				_size = n;
+				for (size_type i = 0; i < _size; ++i)
+					_allocator.construct(_data + i, val);
+			}
+
+		}
+
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last,
+					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+		{
+			if (first > last || last < first)
+				throw std::logic_error("Vector: in range insert");
+			difference_type count = ft::distance(first, last);
+			if (count >  static_cast<difference_type>(_size))
+			{
+				clear();
+				_allocator.deallocate(_data, _capacity);
+				try
+				{
+					_data = _allocator.allocate(count);
+				}
+				catch (std::bad_alloc &ex)
+				{
+					std::cout << ex.what() << std::endl;
+				}
+				_size = count;
+				_capacity = count;
+				for (size_type i = 0; i < _size; ++i, first++)
+					_allocator.construct(_data + i, *first);
+			}
+			else
+			{
+				clear();
+				_size = count;
+				for (size_type i = 0; i < _size; ++i, first++)
+					_allocator.construct(_data + i, *first);
+			}
+		}
+
+		iterator erase (iterator position)
+		{
+			difference_type pos = ft::distance(begin(), position);
+			if (position >= end() || position < begin())
+				throw std::logic_error("Vector: in single erase");
+			if (position == end() - 1)
+			{
+				pop_back();
+			}
+			else
+			{
+				_allocator.destroy(_data + pos);
+				for (size_type i = static_cast<size_type>(pos); i < _size; ++i)
+				{
+					_allocator.construct(_data + i, _data[i + 1]);
+					_allocator.destroy(_data + (i + 1));
+				}
+				--_size;
+			}
+			return (position);
+		}
+
+		iterator erase (iterator first, iterator last)
+		{
+			if (first > last || last < first || last >= end())
+				throw std::logic_error("Vector: in range insert");
+			if (first == last)
+				return (first);
+			difference_type count = ft::distance(first, last);
+			difference_type start = ft::distance(begin(), first);
+			for (difference_type i = start; i < count; ++i)
+				_allocator.destroy(_data + i);
+			for (difference_type i = start; i < static_cast<difference_type>(_size) - count; ++i)
+				_allocator.construct(_data + i, _data[count + i]);
+			_size -= count;
+			return (first);
+		}
 
 		allocator_type getAllocator()
 		{
 			return (_allocator);
 		}
 	};
-//TODO binary operators + - = ...
+
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (lhs.size() != rhs.size() || !ft::equal(lhs.begin(), lhs.end(), rhs.begin()))
+			return (false);
+		return (true);
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (!lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()))
+			return (false);
+		return (true);
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return !(rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return !(lhs < rhs);
+	}
+
 	template<class T, class Allocator>
 	void swap(ft::vector<T, Allocator> &lhs, ft::vector<T, Allocator> &rhs)
 	{

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector/Vector.hpp"
+#include "Vector.hpp"
 #include <iostream>
 
 #define RESCOL "\33[00m"
@@ -30,6 +30,12 @@ public:
 	B(int x) : c(x) {}
 };
 
+void splitter(std::string spl)
+{
+	std::cout << GREENCOL << "------------------------------------------------------------------" << spl
+						  << "------------------------------------------------------------------" << RESCOL <<std::endl;
+}
+
 template <class T>
 void printVec(std::vector<T>&vec1, ft::vector<T>&myVec1)
 {
@@ -38,7 +44,8 @@ void printVec(std::vector<T>&vec1, ft::vector<T>&myVec1)
 	std::cout << std::endl;
 	for (std::size_t i = 0; i <= myVec1.size() - 1; ++i)
 		std::cout << myVec1.at(i) << " ";
-	std::cout << std::endl;
+	std::cout << std::endl << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
+	myVec1.capacity() << " " << myVec1.size() << std::endl << std::endl;
 }
 
 template <class T>
@@ -79,7 +86,7 @@ void fillVector(std::vector<T>&vec1, std::vector<T>&vec2, ft::vector<T>&myVec1, 
 
 void elemAccTest()
 {
-	std::cout << GREENCOL << "-----------------------ACCESS TEST--------------------------------" << RESCOL << std::endl;
+	splitter("ACCESS TEST");
 	ft::vector<int> myVec1;
 	myVec1.reserve(20);
 	myVec1.push_back(1);
@@ -118,7 +125,7 @@ void elemAccTest()
 
 void swapTest()
 {
-	std::cout << GREENCOL << "-----------------------SWAP TEST--------------------------------" << RESCOL << std::endl;
+	splitter("SWAP TEST");
 	ft::vector<int> myVec1;
 	ft::vector<int> myVec2;
 	std::vector<int> vec1;
@@ -145,7 +152,7 @@ void swapTest()
 
 void resizeTest()
 {
-	std::cout << GREENCOL << "-----------------------RESIZE TEST-------------------------------" << RESCOL <<std::endl;
+	splitter("RESIZE TEST");
 	ft::vector<int> myVec1;
 	ft::vector<int> myVec2;
 	std::vector<int> vec1;
@@ -166,8 +173,10 @@ void resizeTest()
 	std::cout << std::endl <<  "data of vec2 before resize" << std::endl;
 	for (; it2 != vec2.end(); ++it2)
 		std::cout << *it2 << " ";
+	std::cout << std::endl;
 
-	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	splitter("-");
+
 	std::cout <<  "data of myVec1 before resize" << std::endl;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
 		std::cout << myVec1.at(i) << " ";
@@ -175,14 +184,15 @@ void resizeTest()
 	std::cout << std::endl <<  "data of myVec2 before resize" << std::endl;
 	for (std::size_t i = 0; i < myVec2.size(); ++i)
 		std::cout << myVec1.at(i) << " ";
-	std::cout << std::endl << "------------------------------------------------" << std::endl;
+	std::cout << std::endl;
+
+	splitter("-");
+
 	std::cout << "size and capacity of vec1 before resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec2 before resize " << vec2.size() << " " << vec2.capacity() << std::endl;
 
 	std::cout << std::endl << "size and capacity of vec1 before resize " << myVec1.size() << " " << myVec1.capacity() << std::endl;
 	std::cout << "size and capacity of myVec2 before resize " << myVec2.size() << " " << myVec2.capacity() << std::endl;
-
-
 
 	vec1.resize(35, 50);
 	vec2.resize(35, 50);
@@ -198,7 +208,10 @@ void resizeTest()
 	std::cout << std::endl <<  "data of vec2 after resize" << std::endl;
 	for (; it2 != vec2.end(); ++it2)
 		std::cout << *it2 << " ";
-	std::cout << std::endl << "------------------------------------------------" << std::endl;
+
+	std::cout << std::endl;
+	splitter("-");
+
 	std::cout <<  "data of myVec1 after resize" << std::endl;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
 		std::cout <<myVec1.at(i) << " ";
@@ -206,7 +219,10 @@ void resizeTest()
 	std::cout << std::endl <<  "data of myVec2 after resize" << std::endl;
 	for (std::size_t i = 0; i < myVec2.size(); ++i)
 		std::cout << myVec1.at(i) << " ";
-	std::cout << std::endl << "------------------------------------------------" << std::endl;
+
+	std::cout << std::endl;
+	splitter("-");
+
 	std::cout <<  "size and capacity of vec1 after resize " << vec1.size() << " " << vec1.capacity() << std::endl;
 	std::cout << "size and capacity of vec1 before after " << vec2.size() << " " << vec2.capacity() << std::endl;
 
@@ -216,7 +232,7 @@ void resizeTest()
 
 void rangeTest()
 {
-	std::cout << GREENCOL << "-----------------------RANGE TEST-------------------------------" << RESCOL << std::endl;
+	splitter("CONSTRUCTOR TEST");
 	ft::vector<int> myVec1;
 	myVec1.reserve(20);
 
@@ -229,9 +245,8 @@ void rangeTest()
 	std::vector<int> vec2(bIt, eIt);
 	ft::vector<int> myVec2(bMIt, eMI);
 	printVec(vec2, myVec2);
-	std::cout << "std::vec cap and size " << std::endl << vec2.capacity() << " " << vec2.size() << std::endl
-	<< myVec2.capacity() << " " << myVec2.size() << std::endl;
-	std::cout << GREENCOL << "-----------------------for(iterator) TEST------------------------" << RESCOL << std::endl;
+
+	splitter("for(iterator) TEST");
 	for ( std::vector<int>::iterator it = vec1.begin(); it < vec1.end(); ++it)
 		std::cout << *it << " ";
 	std::cout << std::endl;
@@ -243,21 +258,14 @@ void rangeTest()
 
 void insertTest()
 {
-	std::cout << GREENCOL << "-----------------------INSERT TEST-------------------------------" << RESCOL << std::endl;
-	std::cout << GREENCOL << "-----------------------FILL TEST-------------------------------" << RESCOL << std::endl;
-	ft::vector<int> myVec1;
+	splitter("INSERT TEST");
+	splitter("FILL TEST");
 
+	ft::vector<int> myVec1;
 	std::vector<int> vec1;
 	fillVector(vec1, myVec1, 10);
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
+	printVec(vec1, myVec1);
 
 	ft::vector<int>::iterator it = myVec1.begin() + 11;
 	std::vector<int>::iterator stdIt = vec1.begin() + 11;
@@ -265,15 +273,7 @@ void insertTest()
 	vec1.insert(stdIt, 10, 7);
 	myVec1.insert(it, 10, 7);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
-
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-		 myVec1.capacity() << " " << myVec1.size() << std::endl;
+	printVec(vec1, myVec1);
 
 	it = myVec1.begin();
 	stdIt = vec1.begin();
@@ -281,77 +281,39 @@ void insertTest()
 	vec1.insert(stdIt + 6, 10, 3);
 	myVec1.insert(it + 6, 10, 3);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
+	printVec(vec1, myVec1);
 
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
-
-	std::cout << GREENCOL << "-----------------------SINGLE TEST-------------------------------" << RESCOL << std::endl;
+	splitter("SINGLE TEST");
 	myVec1.resize(10);
 	vec1.resize(10);
 
 	it = myVec1.begin() ;
 	stdIt = vec1.begin();
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
 
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	printVec(vec1, myVec1);
 
 	stdIt =  vec1.insert(stdIt + 3,  42);
 	it = myVec1.insert(it + 3,  42);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
-
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
+	printVec(vec1, myVec1);
 
 	vec1.insert(stdIt,  43);
 	myVec1.insert(it,  43);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
+	printVec(vec1, myVec1);
 
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
 	std::cout << "value at return iterators. my : " << *it << " std : " << *stdIt << std::endl;
 
-	std::cout << GREENCOL << "-----------------------RANGE TEST-------------------------------" << RESCOL << std::endl;
+	splitter("RANGE TEST");
 
 	vec1.resize(10);
 	std::vector<int> ranVec;
 	ft::vector<int> myRanVec;
 	fillVector(ranVec, myRanVec, 30);
 	myVec1.resize(10);
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
 
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
-	std::cout  << std::endl
-	;
+	printVec(vec1, myVec1);
+
 	std::cout << "vector used to range values" << std::endl ;
 	for (size_t i = 0; i < ranVec.size(); ++i)
 		std::cout << ranVec.at(i) << " ";
@@ -367,24 +329,11 @@ void insertTest()
 	ft::vector<int>::iterator mit1 = myRanVec.begin();
 	ft::vector<int>::iterator mit2 = myRanVec.begin() + 30;
 
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
-	std::cout  << std::endl;
-
 
 	vec1.insert(stdIt, it1, it2 );
 	myVec1.insert(it, mit1, mit2);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
-
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
-	std::cout  << std::endl;
+	printVec(vec1, myVec1);
 
 	it = myVec1.begin();
 	stdIt = vec1.begin();
@@ -396,19 +345,131 @@ void insertTest()
 	vec1.insert(stdIt, it1, it2);
 	myVec1.insert(it, mit1, mit2);
 
-	for (size_t i = 0; i < myVec1.size(); ++i)
-		std::cout << myVec1.at(i) << " ";
-	std::cout  << std::endl;
-	for (size_t i = 0; i < vec1.size(); ++i)
-		std::cout << vec1.at(i) << " ";
-	std::cout  << std::endl;
-
-	std::cout << "std::vec cap and size " << std::endl << vec1.capacity() << " " << vec1.size() << std::endl <<
-			  myVec1.capacity() << " " << myVec1.size() << std::endl;
-	std::cout  << std::endl;
+	printVec(vec1, myVec1);
 
 
 }
+
+void assignTest()
+{
+	splitter("ASSIGN TEST");
+	splitter("FILL TEST");
+	ft::vector<int> myVec1;
+	std::vector<int> vec1;
+	fillVector(vec1, myVec1, 10);
+
+	printVec(vec1, myVec1);
+
+	vec1.assign(5, 42);
+	myVec1.assign(5,42);
+
+	printVec(vec1, myVec1);
+
+	vec1.assign(42, 42);
+	myVec1.assign(42,42);
+
+	printVec(vec1, myVec1);
+
+	splitter("RANGE TEST");
+
+	std::vector<int> ranVec;
+	ft::vector<int> myRanVec;
+	fillVector(ranVec, myRanVec, 50);
+
+	std::cout << "vector used to range values" << std::endl ;
+	printVec(ranVec, myRanVec);
+
+	std::vector<int>::iterator it1 = ranVec.begin();
+	std::vector<int>::iterator it2 = ranVec.begin() + 50;
+	ft::vector<int>::iterator mit1 = myRanVec.begin();
+	ft::vector<int>::iterator mit2 = myRanVec.begin() + 50;
+
+	vec1.assign(it1, it2);
+	myVec1.assign(mit1, mit2);
+
+	printVec(vec1, myVec1);
+
+}
+
+void eraseTest()
+{
+	splitter("ERASE TEST");
+	splitter("SINGLE TEST");
+	ft::vector<int> myVec1;
+	std::vector<int> vec1;
+	fillVector(vec1, myVec1, 10);
+	std::vector<int>::iterator it1 = vec1.begin();
+	std::vector<int>::iterator it2 = vec1.end() - 1;
+	ft::vector<int>::iterator mit1 = myVec1.begin();
+	ft::vector<int>::iterator mit2 = myVec1.end() - 1;
+
+	printVec(vec1, myVec1);
+
+	it1 = vec1.erase(it2);
+	mit1 = myVec1.erase(mit2);
+
+	printVec(vec1, myVec1);
+	if (mit1 == myVec1.end())
+		std::cout << "value of return iterator is end()" << std::endl << std::endl;
+	else
+		std::cout << "value of return iterator is not valid" << std::endl;
+
+	it2 = vec1.begin() + 3;
+	mit2 = myVec1.begin() + 3;
+
+	it1 = vec1.erase(it2);
+	mit1 = myVec1.erase(mit2);
+	printVec(vec1, myVec1);
+
+	std::cout << "value at return iterators. my : " << *it1 << " std : " << *mit1 << std::endl << std::endl;
+
+	splitter("RANGE TEST");
+	vec1.clear();
+	myVec1.clear();
+	fillVector(vec1, myVec1, 40);
+	printVec(vec1, myVec1);
+
+	it1 = vec1.begin() + 2;
+	it2 = vec1.end() - 5;
+	mit1 = myVec1.begin() + 2;
+	mit2 = myVec1.end() - 5;
+
+	std::vector<int>::iterator ret = vec1.erase(it1, it2);
+	ft::vector<int>::iterator myRet = myVec1.erase(mit1, mit2);
+
+	printVec(vec1, myVec1);
+
+	std::cout << "value at return iterators. my : " << *myRet << " std : " << *ret << std::endl << std::endl;
+
+
+	it1 = vec1.begin() + 3;
+	it2 = vec1.end() - 1;
+	mit1 = myVec1.begin() + 3;
+	mit2 = myVec1.end() - 1;
+
+	ret = vec1.erase(it1, it2);
+	myRet = myVec1.erase(mit1, mit2);
+
+	printVec(vec1, myVec1);
+
+	std::cout << "value at return iterators. my : " << *myRet << " std : " << *ret << std::endl << std::endl;
+}
+
+void compareTest()
+{
+	ft::vector<int> foo (3,100);
+	ft::vector<int> bar (3,100);
+
+	if (foo==bar) std::cout << "foo and bar are equal\n";
+	if (foo!=bar) std::cout << "foo and bar are not equal\n";
+	if (foo< bar) std::cout << "foo is less than bar\n";
+	if (foo> bar) std::cout << "foo is greater than bar\n";
+	if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+	if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+}
+
+
 
 int main()
 {
@@ -438,5 +499,8 @@ int main()
 	elemAccTest();
 	rangeTest();
 	insertTest();
+	assignTest();
+	eraseTest();
+	compareTest();
 	return (0);
 }
