@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../utils/Utils.hpp"
 
 #ifndef FT_CONTAINERS_RANDOMACCESSITERATOR_HPP
 #define FT_CONTAINERS_RANDOMACCESSITERATOR_HPP
+
+#include "../utils/Utils.hpp"
 
 namespace ft
 {
@@ -25,8 +26,7 @@ namespace ft
 		typedef typename ft::iterator_traits<T*>::pointer					pointer;
 		typedef typename ft::iterator_traits<T*>::value_type				value_type;
 		typedef typename ft::iterator_traits<T*>::reference					reference;
-		typedef pointer 													iterator_type;//TODO ?
-		typedef ft::random_access_terator_tag								iterator_category;
+		typedef ft::random_access_iterator_tag								iterator_category;
 
 	private:
 		pointer _ptr;
@@ -219,7 +219,7 @@ namespace ft
 	}
 
 	template<class Iter1, class Iter2>
-	typename Iter1::pointer operator<=(const random_access_iterator<Iter1>& l, const
+	typename Iter1::pointer operator-(const random_access_iterator<Iter1>& l, const
 	random_access_iterator<Iter2>& r)
 	{
 		return r.base() - l.base();

@@ -36,7 +36,9 @@ namespace ft
 	public:
 
 		stack(const container_type& cont = container_type()) : c(cont) {}
+
 		stack(const stack & obj) : c(obj.c) {}
+
 		stack & operator=(const stack &obj)
 		{
 			if (this == &obj)

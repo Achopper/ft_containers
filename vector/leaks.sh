@@ -1,1 +1,0 @@
-clang++ -Wall -Wextra -Werror vector/*.hpp main.cpp  && leaks --atExit -- ./a.out

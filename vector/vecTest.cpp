@@ -12,6 +12,7 @@
 
 #include "Vector.hpp"
 #include <iostream>
+#include <iterator>
 
 class A
 {
@@ -34,7 +35,7 @@ void splitter(std::string spl)
 }
 
 template <class T>
-void printVec(std::vector<T>&vec1, ft::vector<T>&myVec1)
+void printVec(ft::vector<T>&vec1, ft::vector<T>&myVec1)
 {
 	for (std::size_t i = 0; i <= vec1.size() - 1; ++i)
 		std::cout << vec1.at(i) << " ";
@@ -46,7 +47,7 @@ void printVec(std::vector<T>&vec1, ft::vector<T>&myVec1)
 }
 
 template <class T>
-void fillVector(std::vector<T>&vec1, ft::vector<T>&myVec1, std::size_t size)
+void fillVector(ft::vector<T>&vec1, ft::vector<T>&myVec1, std::size_t size)
 {
 	for (std::size_t i = 0; i <= size; ++i)
 		vec1.push_back(i);
@@ -55,7 +56,7 @@ void fillVector(std::vector<T>&vec1, ft::vector<T>&myVec1, std::size_t size)
 }
 
 template <class T>
-void fillVector(std::vector<T>&vec1, std::vector<T>&vec2, ft::vector<T>&myVec1, ft::vector<T>&myVec2, std::size_t size)
+void fillVector(ft::vector<T>&vec1, ft::vector<T>&vec2, ft::vector<T>&myVec1, ft::vector<T>&myVec2, std::size_t size)
 {
 	for (std::size_t i = 0; i <= size; ++i)
 	{
@@ -89,7 +90,7 @@ void elemAccTest()
 	myVec1.push_back(1);
 	myVec1.push_back(2);
 	
-	std::vector<int> vec1;
+	ft::vector<int> vec1;
 	vec1.reserve(20);
 	vec1.push_back(1);
 	vec1.push_back(2);
@@ -125,26 +126,26 @@ void swapTest()
 	splitter("SWAP TEST");
 	ft::vector<int> myVec1;
 	ft::vector<int> myVec2;
-	std::vector<int> vec1;
-	std::vector<int> vec2;
+	ft::vector<int> vec1;
+	ft::vector<int> vec2;
 
 	fillVector(vec1,vec2,myVec1,myVec2, 10);
-	std::vector<int>::iterator it1 = vec1.begin() + 4;
-	std::vector<int>::iterator it2 = vec2.begin() + 4;
+	ft::vector<int>::iterator it1 = vec1.begin() + 4;
+	ft::vector<int>::iterator it2 = vec2.begin() + 4;
 	for (std::size_t i = 0; i < myVec1.size(); ++i)
 	{
 		std::cout << myVec1.at(i) << " ";
 	}
 	std::cout << std::endl;
-	std::cout << "std::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
+	std::cout << "ft::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
 	*it1 = 99;
 	*it2 = 88;
-	std::cout << "std::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
+	std::cout << "ft::vector iterators before swap " << *it1 << " " << *it2 << std::endl;
 	vec1.swap(vec2);
-	std::cout << "std::vector iterators after swap " << *it1 << " " << *it2 << std::endl;
+	std::cout << "ft::vector iterators after swap " << *it1 << " " << *it2 << std::endl;
 	*it1 = 10;
 	*it2 = 30;
-	std::cout << "std::vector iterators after swap " << *it1 << " " << *it2 << std::endl;
+	std::cout << "ft::vector iterators after swap " << *it1 << " " << *it2 << std::endl;
 }
 
 void resizeTest()
@@ -152,16 +153,16 @@ void resizeTest()
 	splitter("RESIZE TEST");
 	ft::vector<int> myVec1;
 	ft::vector<int> myVec2;
-	std::vector<int> vec1;
-	std::vector<int> vec2;
+	ft::vector<int> vec1;
+	ft::vector<int> vec2;
 
 	myVec1.reserve(20);
 	myVec2.reserve(20);
 	vec1.reserve(20);
 	vec2.reserve(20);
 	fillVector(vec1, vec2, myVec1, myVec2, 20);
-	std::vector<int>::iterator it1 = vec1.begin();
-	std::vector<int>::iterator it2 = vec2.begin();
+	ft::vector<int>::iterator it1 = vec1.begin();
+	ft::vector<int>::iterator it2 = vec2.begin();
 	std::cout << GREENCOL << "[" << *it1 << "]" << RESCOL << std::endl;
 	std::cout << "data of vec1 before resize" << std::endl;
 	for (; it1 != vec1.end(); ++it1)
@@ -233,18 +234,18 @@ void rangeTest()
 	ft::vector<int> myVec1;
 	myVec1.reserve(20);
 
-	std::vector<int> vec1;
+	ft::vector<int> vec1;
 	vec1.reserve(20);
 	fillVector(vec1, myVec1, 10);
-	std::vector<int>::iterator bIt = vec1.begin(), eIt = vec1.end();
+	ft::vector<int>::iterator bIt = vec1.begin(), eIt = vec1.end();
 	ft::vector<int>::iterator bMIt = myVec1.begin(), eMI = myVec1.end();
 
-	std::vector<int> vec2(bIt, eIt);
+	ft::vector<int> vec2(bIt, eIt);
 	ft::vector<int> myVec2(bMIt, eMI);
 	printVec(vec2, myVec2);
 
 	splitter("for(iterator) TEST");
-	for ( std::vector<int>::iterator it = vec1.begin(); it < vec1.end(); ++it)
+	for ( ft::vector<int>::iterator it = vec1.begin(); it < vec1.end(); ++it)
 		std::cout << *it << " ";
 	std::cout << std::endl;
 	for ( ft::vector<int>::iterator it = myVec1.begin(); it < myVec1.end(); ++it)
@@ -259,13 +260,13 @@ void insertTest()
 	splitter("FILL TEST");
 
 	ft::vector<int> myVec1;
-	std::vector<int> vec1;
-	fillVector(vec1, myVec1, 10);
+	ft::vector<int> vec1;
+	fillVector(vec1, myVec1, 1000000);
 
 	printVec(vec1, myVec1);
 
 	ft::vector<int>::iterator it = myVec1.begin() + 11;
-	std::vector<int>::iterator stdIt = vec1.begin() + 11;
+	ft::vector<int>::iterator stdIt = vec1.begin() + 11;
 
 	vec1.insert(stdIt, 10, 7);
 	myVec1.insert(it, 10, 7);
@@ -281,8 +282,8 @@ void insertTest()
 	printVec(vec1, myVec1);
 
 	splitter("SINGLE TEST");
-	myVec1.resize(10);
-	vec1.resize(10);
+//	myVec1.resize(10);
+//	vec1.resize(10);
 
 	it = myVec1.begin() ;
 	stdIt = vec1.begin();
@@ -304,7 +305,7 @@ void insertTest()
 	splitter("RANGE TEST");
 
 	vec1.resize(10);
-	std::vector<int> ranVec;
+	ft::vector<int> ranVec;
 	ft::vector<int> myRanVec;
 	fillVector(ranVec, myRanVec, 30);
 	myVec1.resize(10);
@@ -321,8 +322,8 @@ void insertTest()
 
 	it = myVec1.begin();
 	stdIt = vec1.begin();
-	std::vector<int>::iterator it1 = ranVec.begin();
-	std::vector<int>::iterator it2 = ranVec.begin() + 30;
+	ft::vector<int>::iterator it1 = ranVec.begin();
+	ft::vector<int>::iterator it2 = ranVec.begin() + 30;
 	ft::vector<int>::iterator mit1 = myRanVec.begin();
 	ft::vector<int>::iterator mit2 = myRanVec.begin() + 30;
 
@@ -352,7 +353,7 @@ void assignTest()
 	splitter("ASSIGN TEST");
 	splitter("FILL TEST");
 	ft::vector<int> myVec1;
-	std::vector<int> vec1;
+	ft::vector<int> vec1;
 	fillVector(vec1, myVec1, 10);
 
 	printVec(vec1, myVec1);
@@ -369,15 +370,15 @@ void assignTest()
 
 	splitter("RANGE TEST");
 
-	std::vector<int> ranVec;
+	ft::vector<int> ranVec;
 	ft::vector<int> myRanVec;
 	fillVector(ranVec, myRanVec, 50);
 
 	std::cout << "vector used to range values" << std::endl ;
 	printVec(ranVec, myRanVec);
 
-	std::vector<int>::iterator it1 = ranVec.begin();
-	std::vector<int>::iterator it2 = ranVec.begin() + 50;
+	ft::vector<int>::iterator it1 = ranVec.begin();
+	ft::vector<int>::iterator it2 = ranVec.begin() + 50;
 	ft::vector<int>::iterator mit1 = myRanVec.begin();
 	ft::vector<int>::iterator mit2 = myRanVec.begin() + 50;
 
@@ -393,10 +394,10 @@ void eraseTest()
 	splitter("ERASE TEST");
 	splitter("SINGLE TEST");
 	ft::vector<int> myVec1;
-	std::vector<int> vec1;
-	fillVector(vec1, myVec1, 10);
-	std::vector<int>::iterator it1 = vec1.begin();
-	std::vector<int>::iterator it2 = vec1.end() - 1;
+	ft::vector<int> vec1;
+	fillVector(vec1, myVec1, 1000000);
+	ft::vector<int>::iterator it1 = vec1.begin();
+	ft::vector<int>::iterator it2 = vec1.end() - 1;
 	ft::vector<int>::iterator mit1 = myVec1.begin();
 	ft::vector<int>::iterator mit2 = myVec1.end() - 1;
 
@@ -431,7 +432,7 @@ void eraseTest()
 	mit1 = myVec1.begin() + 2;
 	mit2 = myVec1.end() - 5;
 
-	std::vector<int>::iterator ret = vec1.erase(it1, it2);
+	ft::vector<int>::iterator ret = vec1.erase(it1, it2);
 	ft::vector<int>::iterator myRet = myVec1.erase(mit1, mit2);
 
 	printVec(vec1, myVec1);
@@ -466,6 +467,29 @@ void compareTest()
 
 }
 
+void revIterTest()
+{
+	ft::vector<int> a;
+	for (int i = 0; i <= 100 ; ++i)
+		a.push_back(i);
+	ft::vector<int>::iterator it = a.end() - 1;
+	ft::vector<int>::iterator it2 = a.begin();
+	ft::reverse_iterator<ft::vector<int>::iterator> reit(it);
+	ft::reverse_iterator<ft::vector<int>::iterator> rbit(it2);
+	while (reit++ != a.rend() - 1)
+
+	{ std::cout << *reit << " "; }
+	std::cout << std::endl;
+
+	while (rbit-- != a.rbegin())
+	{ std::cout << *rbit << " "; }
+	std::cout << std::endl;
+
+	std::cout << reit - rbit << std::endl;
+
+}
+
+
 int main()
 {
 	A a;
@@ -473,20 +497,21 @@ int main()
 	b.a = 15;
 	ft::vector<A> myVec(10);
 	ft::vector<A> myVec1(20, b);
+	ft::vector<int>x((ft::vector<int>()));
 	myVec.swap(myVec1);
 	myVec = myVec1;
 	std::cout << myVec.size() << " MY " << myVec.capacity() << std::endl;
-	std::vector<int> vec(2, 10);
+	ft::vector<int> vec(2, 10);
 	ft::vector<int> intVec(2, 10);
 	std::cout << vec.size() << " VEC " << vec.capacity() << std::endl;
 	vec.push_back(20);
 	intVec.push_back(20);
 	std::cout << vec.size() << " SZ " << vec.capacity() << " " << vec.max_size() << std::endl;
 	std::cout << intVec.size() << " SZ " << intVec.capacity() << " " << intVec.max_size() << std::endl;
-	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+	for (ft::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
 		std::cout << *it << " ";
 	std::cout << std::endl << vec.capacity() << std::endl;
-	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+	for (ft::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
 		std::cout << *it << " ";
 	std::cout << std::endl << vec.capacity() << std::endl;
 	swapTest();
@@ -497,5 +522,6 @@ int main()
 	assignTest();
 	eraseTest();
 	compareTest();
+	revIterTest();
 	return (0);
 }

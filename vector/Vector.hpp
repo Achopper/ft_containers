@@ -15,6 +15,7 @@
 #include "../utils/Utils.hpp"
 #include "../iterators/RandomAccessIterator.hpp"
 #include <iterator>
+#include "../iterators/ReverseIterator.hpp"
 
 
 namespace ft
@@ -33,8 +34,8 @@ namespace ft
 		typedef const value_type&					const_reference;
 		typedef  random_access_iterator<value_type> iterator;
 		typedef  random_access_iterator<value_type> const_iterator;
-		typedef std::reverse_iterator<iterator> 	reverse_iterator; //TODO make rev_it
-		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> 		reverse_iterator; //TODO make rev_it
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	private:
 		size_type 							_size;
@@ -49,14 +50,13 @@ namespace ft
 				  _capacity(0),
 				  _data(0),
 				  _allocator(allocator)
-		{};
+		{}
 
 
 		 vector(size_type n, const value_type &val = value_type(),
 						const allocator_type &allocator = allocator_type())
 				: _size(n),
 				  _capacity(n),
-				  _data(0),
 				  _allocator(allocator)
 		{
 			try
@@ -85,7 +85,7 @@ namespace ft
 				_allocator.construct(_data + i, *(first + i));
 		}
 
-		vector(const vector &obj)
+		vector(const vector &obj) : _size(0), _capacity(0)
 		{
 			*this = obj;
 		}
@@ -109,6 +109,7 @@ namespace ft
 			{
 				if (_capacity != 0)
 					_allocator.deallocate(_data, _capacity);
+				_capacity = _size;
 				try
 				{
 					_data = _allocator.allocate(obj._capacity);
@@ -117,7 +118,6 @@ namespace ft
 					std::cout << ex.what();
 				}
 			}
-			_capacity = _size;
 			for (size_type i = 0; i < _size; ++i)
 				_allocator.construct(_data + i, obj._data[i]);
 			return (*this);
@@ -303,7 +303,7 @@ namespace ft
 		void pop_back()
 		{
 			_allocator.destroy(_data + (_size - 1));
-			_size--;
+			--_size;
 		}
 
 		void clear()

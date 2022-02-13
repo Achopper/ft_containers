@@ -16,5 +16,8 @@ test: all
 	@diff std.txt my.txt > diff.txt
 	@cat diff.txt
 
+leaks:
+	clang++ -Wall -Wextra -Werror stackTest.cpp -o my.out && leaks --atExit -- my.out
+
 clean:
 	rm my.out std.out std_stackTest.cpp std.txt my.txt diff.txt

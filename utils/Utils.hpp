@@ -21,6 +21,16 @@
 #define GREENCOL "\33[32m"
 
 namespace ft {
+
+//------------------------PAIR--------------------------------------
+
+template<class K, class V>
+struct pair
+{
+	K				firs;
+	V				second;
+};
+
 //------------------------ENABLE_IF---------------------------------
 	template <bool cond, class T = void>
 	struct enable_if { };
@@ -59,7 +69,8 @@ namespace ft {
 
 //---------------------------ITERATORS_UTILS---------------------------------
 
-class random_access_terator_tag {};
+	struct bidirectional_iterator_tag {};
+	struct random_access_iterator_tag  : public bidirectional_iterator_tag{};
 
 template<class Iterator>
 		struct iterator_traits
@@ -78,7 +89,7 @@ template <class T>
 			typedef T												value_type;
 			typedef T*												pointer;
 			typedef T&												reference;
-			typedef  random_access_terator_tag						iterator_category;
+			typedef  random_access_iterator_tag						iterator_category;
 	};
 
 template <class T>
@@ -88,8 +99,9 @@ template <class T>
 			typedef T												value_type;
 			typedef T*												pointer;
 			typedef T&												reference;
-			typedef random_access_terator_tag						iterator_category;
+			typedef random_access_iterator_tag						iterator_category;
 	};
+
 	template <class InputIter>
 	typename ft::iterator_traits<InputIter>::difference_type distance(InputIter first, InputIter last)
 	{
@@ -101,6 +113,8 @@ template <class T>
 		}
 		return (res);
 	}
+
+	//STL-------------------------------------------------------------------------------
 
 	template <class InputIterator1, class InputIterator2>
 	bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
