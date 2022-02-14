@@ -14,7 +14,7 @@
 #define FT_CONTAINERS_UTILS_H
 
 #include <memory>
-#include <vector>
+#include <map>
 #include <iostream>
 
 #define RESCOL "\33[00m"
@@ -27,10 +27,24 @@ namespace ft {
 template<class K, class V>
 struct pair
 {
-	K				firs;
-	V				second;
+	typedef K				first_type;
+	typedef V				second_type;
+	first_type 				first;
+	second_type 			second;
+
+	pair() {}
+	pair(first_type &f_t, second_type &s_t):	first(f_t), second(s_t) {}
+	template<class T, class T1>
+	pair( const pair<T, T1>& obj) : first(obj.first), second(obj.second) {}
+	pair( const pair& obj) : first(obj.first), second(obj.second) {}
+	~pair() {}
 };
 
+template <class K, class V>
+		ft::pair<K, V> make_pair(const K key ,const V value)
+{
+	return (pair<K, V>(key, value));
+}
 //------------------------ENABLE_IF---------------------------------
 	template <bool cond, class T = void>
 	struct enable_if { };
@@ -66,6 +80,7 @@ struct pair
 	template<> 			struct is_integral<short>		:	ft::true_type {};
 	template<> 			struct is_integral<long>		:	ft::true_type {};
 	template<> 			struct is_integral<long long>	:	ft::true_type {};
+	//TODO add values
 
 //---------------------------ITERATORS_UTILS---------------------------------
 
@@ -75,11 +90,11 @@ struct pair
 template<class Iterator>
 		struct iterator_traits
 	{
-			typedef typename Iterator::difference_type		difference_type;
-			typedef typename Iterator::pointer				pointer;
-			typedef typename Iterator::reference			reference;
-			typedef typename Iterator::value_type			value_type;
-			typedef typename Iterator::iterator_category	iterator_category;
+			typedef typename Iterator::difference_type				difference_type;
+			typedef typename Iterator::pointer						pointer;
+			typedef typename Iterator::reference					reference;
+			typedef typename Iterator::value_type					value_type;
+			typedef typename Iterator::iterator_category			iterator_category;
 	};
 
 template <class T>
