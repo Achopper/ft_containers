@@ -36,6 +36,7 @@ cmake-build-debug
 CMakeLists.txt
 .idea
 a.out.dSYM
+tst.cpp
 
 <<<<<<< HEAD
 #vs code files

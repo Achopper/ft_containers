@@ -13,6 +13,7 @@
 #include "Vector.hpp"
 #include <iostream>
 #include <iterator>
+#include <vector>
 
 class A
 {

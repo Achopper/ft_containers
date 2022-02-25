@@ -19,6 +19,7 @@
 
 #define RESCOL "\33[00m"
 #define GREENCOL "\33[32m"
+#define REDCOL "\33[31m"
 
 namespace ft {
 
@@ -32,11 +33,14 @@ struct pair
 	first_type 				first;
 	second_type 			second;
 
-	pair() {}
-	pair(first_type &f_t, second_type &s_t):	first(f_t), second(s_t) {}
+	pair() : first(), second() {}
 	template<class T, class T1>
 	pair( const pair<T, T1>& obj) : first(obj.first), second(obj.second) {}
+	pair(const first_type &f_t, const second_type &s_t):	first(f_t), second(s_t) {}
 	pair( const pair& obj) : first(obj.first), second(obj.second) {}
+	bool operator<(const pair& obj) const { return second < obj.second; }
+	bool operator==(const pair& obj) const { return second == obj.second; }
+	bool operator!=(const pair& obj) const { return second != obj.second; }
 	~pair() {}
 };
 
