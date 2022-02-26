@@ -68,11 +68,12 @@ public:
 	typedef Compare													value_compare;
 	typedef Node<T>													node;
 	typedef typename Allocator::template rebind<node>::other		allocator_type;
+	//TODO interator
+	//TODO const_iterator
 	typedef typename allocator_type::pointer 						pointer;
 	typedef typename allocator_type::const_pointer 					const_pointer;
 	typedef std::size_t												size_type;
 
-	//TODO iterators
 
 private:
 
@@ -93,8 +94,13 @@ public:
 		_root = _nil;
 	}
 
-	//copy
+	RBTree(const RBTree & obj)
+	{
+		*this = obj;
+	}
+
 	//assign
+
 	~RBTree()
 	{
 		_clear_node(_root);
@@ -128,6 +134,48 @@ private:
 		return (newNode);
 	}
 
+	void _rotateLeft(pointer node)
+	{
+		pointer right = node->right;
+		node->right = right->left;
+
+		if (node->left != _nil)
+			right->left->parent = node;
+
+		right->parent = node->parent;
+
+		if (node->parent == _nil)
+			_root = right;
+		else if (node == node->parent->left)
+			node->parent->left = right;
+		else
+			node->parent->right = right;
+
+		right->left = node;
+		node->parent = right;
+	}
+
+	void _rotateRight(pointer node)
+	{
+		pointer left = node->left;
+		node->left = left->right;
+
+		if (node->left != _nil)
+			left->left->parent = node;
+
+		left->parent = node->parent;
+
+		if (node->parent == _nil)
+			_root = left;
+		else if (node == node->parent->left)
+			node->parent->left = left;
+		else
+			node->parent->right = left;
+
+		left->right = node;
+		node->parent = left;
+	}
+
 	void _clear_node(pointer root)
 	{
 		if (root == _nil)
@@ -140,23 +188,24 @@ private:
 		root = _nil;
 	}
 
-	pointer _findVal(pointer root, const value_type &val)
+	pointer _findKey(pointer root, const value_type &val) const
 	{
 		if (root == _nil)
 			return (_nil);
-		if (_comp(root->value, val))
-				return _findVal(root->right, val);
-		else if (_comp(val, root->value))
-				return _findVal(root->left, val);
-		else
+		if (root->value.first == val.first)
 			return (root);
+		if (_comp(val, root->value))
+			return _findKey(root->left, val);
+		else if (_comp(root->value, val))
+			return _findKey(root->right, val);
+		return (root);
 	}
 
 public:
 
-	void insert(const value_type &val) //TODO return iterator
+	void insert(const value_type &val) //TODO return iterator?
 	{
-		if (_findVal(_root, val) != _nil)
+		if (_findKey(_root, val) != _nil)
 		{
 			std::cout << "find it!" << std::endl;
 			return;
@@ -168,13 +217,18 @@ public:
 		_root->color = 'B';
 	}
 
-	size_type size()
+
+	size_type size() const
 	{
 		return (_size);
 	}
 
+	bool empty() const
+	{
+		return (_size == 0);
+	}
 
-
+	//TODO del
 	void print_tree()
 	{
 		inorderHelper(_root);
@@ -187,7 +241,7 @@ public:
 
 		inorderHelper(root->left);
 		root->color == 'B' ? std::cout << GREENCOL : std::cout << REDCOL;
-		std::cout << root->value.second << "  " << RESCOL;
+		std::cout << "<" << root->value.first <<  " " << root->value.second << ">" << " " << RESCOL;
 		inorderHelper(root->right);
 	}
 };

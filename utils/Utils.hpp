@@ -38,11 +38,39 @@ struct pair
 	pair( const pair<T, T1>& obj) : first(obj.first), second(obj.second) {}
 	pair(const first_type &f_t, const second_type &s_t):	first(f_t), second(s_t) {}
 	pair( const pair& obj) : first(obj.first), second(obj.second) {}
-	bool operator<(const pair& obj) const { return second < obj.second; }
-	bool operator==(const pair& obj) const { return second == obj.second; }
-	bool operator!=(const pair& obj) const { return second != obj.second; }
+	pair& operator=(const pair& obj) { first = obj.first; second = obj.second; return *this; }
 	~pair() {}
 };
+
+	template <class T1, class T2>
+	bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return lhs.first == rhs.first && lhs.second == rhs.second;
+	}
+
+	template <class T1, class T2>
+	bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return !(lhs == rhs);
+	}
+
+	template <class T1, class T2>
+	bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return (lhs.first < rhs.first) || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
+	}
+
+	template <class T1, class T2>
+	bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return !(rhs < lhs);
+	}
+
+	template <class T1, class T2>
+	bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return rhs < lhs;
+	}
+
+	template <class T1, class T2>
+	bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+		return !(lhs < rhs);
+	}
 
 template <class K, class V>
 		ft::pair<K, V> make_pair(const K key ,const V value)
