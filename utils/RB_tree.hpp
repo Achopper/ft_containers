@@ -111,6 +111,78 @@ public:
 
 private:
 
+	pointer _treeMin()
+	{
+		pointer tmp = _root;
+		while (tmp->left != _nil)
+			tmp = tmp->left;
+		return tmp;
+	}
+
+	pointer _treeMax()
+	{
+		pointer tmp = _root;
+		while (tmp->left != _nil)
+			tmp = tmp->right;
+		return tmp;
+	}
+
+	void _insertFixup(pointer newNode)
+	{
+		pointer uncle;
+		if (newNode != _root && newNode->parent != _root)
+		{
+			while (newNode->parent->color == 'R')
+			{
+				if (newNode->parent == newNode->parent->parent->left)
+				{
+					uncle = newNode->parent->parent->right;
+					if (uncle->color == 'R')
+					{
+						newNode->parent->color = 'B';
+						uncle->color = 'B';
+						newNode->parent->parent->color = 'R';
+						newNode = newNode->parent->parent;
+					}
+					else
+					{
+						if (newNode == newNode->parent->right)
+						{
+							newNode = newNode->parent;
+							_rotateLeft(newNode);
+						}
+						newNode->parent->color = 'B';
+						newNode->parent->parent->color = 'R';
+						_rotateRight(newNode->parent->parent);
+					}
+				}
+				else
+				{
+					uncle = newNode->parent->parent->left;
+					if (uncle->color == 'R')
+					{
+						newNode->parent->color = 'B';
+						uncle->color = 'B';
+						newNode->parent->parent->color = 'R';
+						newNode = newNode->parent->parent;
+					}
+					else
+					{
+						if (newNode == newNode->parent->left)
+						{
+							newNode = newNode->parent;
+							_rotateRight(newNode);
+						}
+						newNode->parent->color = 'B';
+						newNode->parent->parent->color = 'R';
+						_rotateLeft(newNode->parent->parent);
+					}
+				}
+			}
+		}
+		_root->color = 'B';
+	}
+
 	pointer _insert(pointer root, pointer newNode)
 	{
 		if (_root == _nil)
@@ -131,6 +203,7 @@ private:
 			root->left = newNode;
 		}
 		newNode->parent = root;
+		_insertFixup(newNode);
 		return (newNode);
 	}
 
@@ -214,7 +287,6 @@ public:
 		_allocator.construct(newNode, node(_nil,_nil,_nil, 'R', val));
 		_insert(_root, newNode);
 		++_size;
-		_root->color = 'B';
 	}
 
 
@@ -232,6 +304,8 @@ public:
 	void print_tree()
 	{
 		inorderHelper(_root);
+		std::cout << std::endl;
+		std::cout << "min " << _treeMin()->value.first << " | max " << _treeMax()->value.first << std::endl;
 	}
 
 	void inorderHelper(pointer root)
@@ -243,6 +317,7 @@ public:
 		root->color == 'B' ? std::cout << GREENCOL : std::cout << REDCOL;
 		std::cout << "<" << root->value.first <<  " " << root->value.second << ">" << " " << RESCOL;
 		inorderHelper(root->right);
+
 	}
 };
 
