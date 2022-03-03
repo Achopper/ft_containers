@@ -103,7 +103,7 @@ public:
 
 	~RBTree()
 	{
-		_clear_node(_root);
+		_clearTree(_root);
 		_allocator.destroy(_nil);
 		_allocator.deallocate(_nil, 1);
 	}
@@ -111,20 +111,19 @@ public:
 
 private:
 
-	pointer _treeMin()
+	pointer _treeMin(pointer root)
 	{
-		pointer tmp = _root;
-		while (tmp->left != _nil)
-			tmp = tmp->left;
-		return tmp;
+
+		while (root->left != _nil)
+			root = root->left;
+		return root;
 	}
 
-	pointer _treeMax()
+	pointer _treeMax(pointer root)
 	{
-		pointer tmp = _root;
-		while (tmp->left != _nil)
-			tmp = tmp->right;
-		return tmp;
+		while (root->right != _nil)
+			root = root->right;
+		return root;
 	}
 
 	void _insertFixup(pointer newNode)
@@ -249,12 +248,12 @@ private:
 		node->parent = left;
 	}
 
-	void _clear_node(pointer root)
+	void _clearTree(pointer root)
 	{
 		if (root == _nil)
 			return ;
-		_clear_node(root->left);
-		_clear_node(root->right);
+		_clearTree(root->left);
+		_clearTree(root->right);
 		_allocator.destroy(root);
 		_allocator.deallocate(root, 1);
 		--_size;
@@ -274,7 +273,78 @@ private:
 		return (root);
 	}
 
+	void _rbTrpl(pointer x, pointer y)
+	{
+		if (x->parent == _nil)
+			_root = y;
+		else if (x == x->parent->left)
+			x->parent->left = y;
+		else
+			x->parent->right = y;
+		y->parent = x->parent;
+	}
+
+
+	void _deleteFix(pointer node)
+	{
+
+	}
+
+	void _delete(pointer node)
+	{
+		pointer x;
+		pointer y = node;
+		char col = y->color;
+		if (node->left == _nil)
+		{
+			x = node->right;
+			_rbTrpl(node, node->right);
+		}
+		else if (node->right == _nil)
+		{
+			x = node->left;
+			_rbTrpl(node, node->left);
+		}
+		else
+		{
+			y = _treeMin(node->right);
+			col = y->color;
+			x = y->right;
+			if (y->parent == node)
+				x->parent = y;
+			else
+			{
+				_rbTrpl(y, y->right);
+				y->right = node->right;
+				y->right->parent = y;
+			}
+			_rbTrpl(node, y);
+			y->left = node->left;
+			y->left->parent = y;
+			y->color = node->color;
+		}
+		_allocator.destroy(node);
+		_allocator.deallocate(node, 1);
+		--_size;
+		if (col == 'B')
+			_deleteFix(x);
+	}
+
+
 public:
+
+	pointer find(const value_type &key) const
+	{
+		pointer res = _findKey(_root, key);
+		return (res == _nil ? _treeMax(_root) : res);
+	}
+
+	void erase(const value_type key)
+	{
+		pointer toDel = _findKey(_root, key);
+		if (toDel != _nil)
+			_delete(toDel);
+	}
 
 	void insert(const value_type &val) //TODO return iterator?
 	{
@@ -305,7 +375,7 @@ public:
 	{
 		inorderHelper(_root);
 		std::cout << std::endl;
-		std::cout << "min " << _treeMin()->value.first << " | max " << _treeMax()->value.first << std::endl;
+		std::cout << "min " << _treeMin(_root)->value.first << " | max " << _treeMax(_root)->value.first << std::endl;
 	}
 
 	void inorderHelper(pointer root)
