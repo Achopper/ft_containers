@@ -26,6 +26,7 @@ public:
 	typedef Compare													value_compare;
 	typedef Allocator												allocator_type;
 	typedef ft::Node<value_type>									node;
+	typedef typename Allocator::template rebind<node>::other		allocator_type;
 	typedef typename allocator_type::pointer 						pointer;
 	typedef typename allocator_type::const_pointer 					const_pointer;
 	typedef std::size_t												size_type;
