@@ -47,9 +47,10 @@ namespace ft
 			return (*this);
 		}
 
-		virtual ~random_access_iterator() {}
+		~random_access_iterator() {}
 
-		operator random_access_iterator <const value_type> () const {
+		operator random_access_iterator <const value_type> () const
+		{
 			return random_access_iterator<const value_type>(_ptr);
 		}
 

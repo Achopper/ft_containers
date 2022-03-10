@@ -23,8 +23,8 @@ namespace ft
 	class vector
 	{
 	public:
-		typedef 									std::size_t size_type;
-		typedef 									std::ptrdiff_t difference_type;
+		typedef std::size_t 						size_type;
+		typedef std::ptrdiff_t 						difference_type;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef typename Allocator::pointer 		pointer;
 		typedef Allocator 							allocator_type;

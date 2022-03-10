@@ -114,6 +114,51 @@ template <class K, class V>
 	template<> 			struct is_integral<long long>	:	ft::true_type {};
 	//TODO add values
 
+	template<class Data>
+	struct Node
+	{
+		typedef Data 			value_type;
+		value_type 				value;
+		Node					*left;
+		Node					*right;
+		Node					*parent;
+		char					color;
+
+		Node() : value(value_type()), color(0) {}
+
+		Node(Node *l, Node *r, Node *p, char col, const value_type &val)
+				:
+				value(val),
+				left(l),
+				right(r),
+				parent(p),
+				color(col)
+		{}
+
+		Node(const Node& obj)
+				:
+				value(obj.value),
+				left(obj.left),
+				right(obj.right),
+				parent(obj.parent),
+				color(obj.color)
+
+		{}
+
+		Node operator=(const Node& obj)
+		{
+			if (this == &obj)
+				return (this);
+			value = obj.val;
+			left = obj.left;
+			right = obj.right;
+			parent = obj.parent;
+			color = obj.color;
+		}
+
+		~Node() {}
+
+	};
 //---------------------------ITERATORS_UTILS---------------------------------
 
 	struct bidirectional_iterator_tag {};

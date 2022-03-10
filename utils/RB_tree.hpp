@@ -14,65 +14,23 @@
 #define FT_CONTAINERS_RB_TREE_HPP
 
 #include "Utils.hpp"
+#include "../iterators/TreeIterator.hpp"
 
-template<class Data>
-struct Node
-{
-	typedef Data 			value_type;
-	value_type 				value;
-	Node					*left;
-	Node					*right;
-	Node					*parent;
-	char					color;
 
-	Node() : color(0) {}
-	Node(Node *l, Node *r, Node *p, char col, const value_type &val)
-	:
-	    value(val),
-		left(l),
-		right(r),
-		parent(p),
-		color(col)
-	{}
 
-	Node(const Node& obj)
-	:
-	    value(obj.value),
-		left(obj.left),
-		right(obj.right),
-		parent(obj.parent),
-		color(obj.color)
-
-	{}
-
-	Node operator=(const Node& obj)
-	{
-		if (this == &obj)
-			return (this);
-		value = obj.val;
-		left = obj.left;
-		right = obj.right;
-		parent = obj.parent;
-		color = obj.color;
-	}
-
-	~Node() {}
-
-};
-
-template <class T, class Compare = std::less<T>, class Allocator = std::allocator<T> >
+template <class T, class Compare = std::less<T>,  class Allocator = std::allocator<T> >
 class RBTree
 {
 public:
 	typedef T														value_type;
 	typedef Compare													value_compare;
-	typedef Node<T>													node;
-	typedef typename Allocator::template rebind<node>::other		allocator_type;
-	//TODO interator
-	//TODO const_iterator
+	typedef Allocator												allocator_type;
+	typedef ft::Node<value_type>									node;
 	typedef typename allocator_type::pointer 						pointer;
 	typedef typename allocator_type::const_pointer 					const_pointer;
 	typedef std::size_t												size_type;
+	typedef ft::TreeIterator<value_type>							iterator;
+	typedef ft::TreeIterator<const value_type>						const_iterator;
 
 
 private:
@@ -111,7 +69,44 @@ public:
 
 private:
 
-	pointer _treeMin(pointer root)
+	pointer _findNext(const value_type &val) const
+	{
+		pointer y;
+		pointer tmp = _findKey(_root, val);
+		if (tmp == _nil)
+			return (_nil->right);
+		if (tmp->right != _nil)
+			return (_treeMin(tmp->right));
+		y = tmp->parent;
+		while (y != _nil && tmp == y->right)
+		{
+			tmp = y;
+			y = y->parent;
+		}
+		return (y);
+	}
+
+	pointer _findPrev(const value_type &val) const
+	{
+		pointer y;
+		pointer tmp = _findKey(_root, val);
+		if (tmp == _nil->right || tmp == _nil->left)
+			return (tmp);
+		if (tmp == _nil )
+			return (_nil->left);
+		if (tmp->left != _nil)
+			return (_treeMax(tmp->left));
+		y = tmp->parent;
+		while (y != _nil && tmp == y->left)
+		{
+			tmp = y;
+			y = y->parent;
+		}
+		return (y);
+	}
+
+
+	pointer _treeMin(pointer root) const
 	{
 
 		while (root->left != _nil)
@@ -119,7 +114,7 @@ private:
 		return root;
 	}
 
-	pointer _treeMax(pointer root)
+	pointer _treeMax(pointer root) const
 	{
 		while (root->right != _nil)
 			root = root->right;
@@ -203,6 +198,7 @@ private:
 		}
 		newNode->parent = root;
 		_insertFixup(newNode);
+		_setNils();
 		return (newNode);
 	}
 
@@ -284,10 +280,81 @@ private:
 		y->parent = x->parent;
 	}
 
+	void _setNils()
+	{
+		_nil->left = _treeMin(_root);
+		_nil->right = _treeMax(_root);
+	}
 
 	void _deleteFix(pointer node)
 	{
-
+		pointer bro;
+		while (node != _root && node->color == 'B')
+		{
+			if (node == node->parent->left)
+			{
+				bro = node->parent->right;
+				if (bro->color == 'R')
+				{
+					bro->color = 'B';
+					node->parent->color = 'R';
+					_rotateLeft(node->parent);
+					bro = node->parent->right;
+				}
+				if (bro->left->color == 'B' && bro->right->color == 'B')
+				{
+					bro->color = 'R';
+					node = node->parent;
+				}
+				else
+				{
+					if (bro->right->color == 'B')
+					{
+						bro->left->color = 'B';
+						bro->color = 'R';
+						_rotateRight(bro);
+						bro = node->parent->right;
+					}
+					bro->color = node->parent->color;
+					node->parent->color = 'B';
+					bro->right->color = 'B';
+					_rotateLeft(node->parent);
+					node = _root;
+				}
+			}
+			else
+			{
+				bro = node->parent->left;
+				if (bro->color == 'R')
+				{
+					bro->color = 'B';
+					node->parent->color = 'R';
+					_rotateRight(node->parent);
+					bro = node->parent->left;
+				}
+				if (bro->right->color == 'B' && bro->left->color == 'B')
+				{
+					bro->color = 'R';
+					node = node->parent;
+				}
+				else
+				{
+					if (bro->left->color == 'B')
+					{
+						bro->right->color = 'B';
+						bro->color = 'R';
+						_rotateLeft(bro);
+						bro = node->parent->left;
+					}
+					bro->color = node->parent->color;
+					node->parent->color = 'B';
+					bro->left->color = 'B';
+					_rotateRight(node->parent);
+					node = _root;
+				}
+			}
+		}
+		node->color = 'B';
 	}
 
 	void _delete(pointer node)
@@ -328,6 +395,7 @@ private:
 		--_size;
 		if (col == 'B')
 			_deleteFix(x);
+		_setNils();
 	}
 
 
@@ -336,7 +404,7 @@ public:
 	pointer find(const value_type &key) const
 	{
 		pointer res = _findKey(_root, key);
-		return (res == _nil ? _treeMax(_root) : res);
+		return (res == _nil ? _nil->right : res);
 	}
 
 	void erase(const value_type key)
@@ -370,23 +438,44 @@ public:
 		return (_size == 0);
 	}
 
+	size_type max_size()
+	{
+		return (_allocator.max_size());
+	}
+
+	iterator begin()
+	{
+		return (iterator(_nil->left->value));
+	}
+	
+
 	//TODO del
 	void print_tree()
 	{
-		inorderHelper(_root);
+		inorderPrint(_root);
 		std::cout << std::endl;
-		std::cout << "min " << _treeMin(_root)->value.first << " | max " << _treeMax(_root)->value.first << std::endl;
+		//std::cout << "min " << _treeMin(_root)->value.first << " | max " << _treeMax(_root)->value.first << std::endl;
+		std::cout << "min " << _nil->left->value.first << " | max " << _nil->right->value.first << std::endl;
+		std::cout << "size is " << size() << std::endl;
+		std::cout << "max size is " << max_size() << std::endl;
+		ft::pair<int, int > x = ft::make_pair(1,1);
+		pointer prev = _findPrev(x);
+		std::cout << "lower " << prev->value.first << " " << prev->value.second << std::endl;
+		pointer next = _findNext(x);
+		std::cout << "upper " <<  next->value.first << " " << next->value.second << std::endl;
+
+		//std::cout << *begin().first << std::endl;
 	}
 
-	void inorderHelper(pointer root)
+	void inorderPrint(pointer root)
 	{
 		if (root == _nil)
 			return;
 
-		inorderHelper(root->left);
+		inorderPrint(root->left);
 		root->color == 'B' ? std::cout << GREENCOL : std::cout << REDCOL;
 		std::cout << "<" << root->value.first <<  " " << root->value.second << ">" << " " << RESCOL;
-		inorderHelper(root->right);
+		inorderPrint(root->right);
 
 	}
 };
