@@ -43,27 +43,27 @@ struct pair
 };
 
 	template <class T1, class T2>
-	bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+	bool operator==(const pair< T1, T2> &lhs, const pair< T1, T2> &rhs) {
 		return lhs.first == rhs.first && lhs.second == rhs.second;
 	}
 
 	template <class T1, class T2>
-	bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+	bool operator!=(const pair< T1, T2> &lhs, const pair< T1, T2> &rhs) {
 		return !(lhs == rhs);
 	}
 
 	template <class T1, class T2>
-	bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+	bool operator<(const pair< T1, T2> &lhs, const pair< T1, T2> &rhs) {
 		return (lhs.first < rhs.first) || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
 	}
 
 	template <class T1, class T2>
-	bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+	bool operator<=(const pair< T1, T2> &lhs, const pair< T1, T2> &rhs) {
 		return !(rhs < lhs);
 	}
 
 	template <class T1, class T2>
-	bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
+	bool operator>(const pair< T1, T2> &lhs, const pair< T1, T2> &rhs) {
 		return rhs < lhs;
 	}
 
@@ -73,9 +73,9 @@ struct pair
 	}
 
 template <class K, class V>
-		ft::pair<K, V> make_pair(const K key ,const V value)
+		ft::pair< K, V> make_pair(const K key ,const V value)
 {
-	return (pair<K, V>(key, value));
+	return (pair< K, V>(key, value));
 }
 //------------------------ENABLE_IF---------------------------------
 	template <bool cond, class T = void>
@@ -114,17 +114,21 @@ template <class K, class V>
 	template<> 			struct is_integral<long long>	:	ft::true_type {};
 	//TODO add values
 
+//-------------------------------NODE---------------------------------------------------
 	template<class Data>
 	struct Node
 	{
 		typedef Data 			value_type;
-		value_type 				value;
+		value_type 				*value;
 		Node					*left;
 		Node					*right;
 		Node					*parent;
+		bool 					isNil;
 		char					color;
 
-		Node() : value(value_type()), color(0) {}
+		//Node() : value(value_type()), color(0) {}
+
+		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), color('B') {}
 
 		Node(Node *l, Node *r, Node *p, char col, const value_type &val)
 				:
@@ -145,15 +149,16 @@ template <class K, class V>
 
 		{}
 
-		Node operator=(const Node& obj)
+		Node& operator=(const Node& obj)
 		{
 			if (this == &obj)
-				return (this);
+				return (*this);
 			value = obj.val;
 			left = obj.left;
 			right = obj.right;
 			parent = obj.parent;
 			color = obj.color;
+			return (*this);
 		}
 
 		~Node() {}
