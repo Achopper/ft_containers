@@ -23,29 +23,29 @@ namespace ft
 	class RBTree
 	{
 	public:
-		typedef T value_type;
-		typedef Compare value_compare;
-		typedef Allocator allocator_type;
-		typedef ft::Node<value_type> node;
-		typedef typename Allocator::template rebind<ft::Node<value_type> >::other node_allocator;
-		typedef typename node_allocator::pointer node_pointer;
-		typedef typename allocator_type::pointer pointer;
-		typedef typename allocator_type::const_pointer const_pointer;
-		typedef std::size_t size_type;
-		typedef ft::TreeIterator<value_type> iterator;
-		typedef ft::TreeIterator<const value_type> const_iterator;
-		typedef ft::reverse_iterator<iterator> reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef T 																	value_type;
+		typedef Compare 															value_compare;
+		typedef Allocator 															allocator_type;
+		typedef ft::Node<value_type>												node;
+		typedef typename Allocator::template rebind<ft::Node<value_type> >::other 	node_allocator;
+		typedef typename node_allocator::pointer 									node_pointer;
+		typedef typename allocator_type::pointer 									pointer;
+		typedef typename allocator_type::const_pointer								const_pointer;
+		typedef std::size_t 														size_type;
+		typedef ft::TreeIterator<value_type> 										iterator;
+		typedef ft::TreeIterator<const value_type> 									const_iterator;
+		typedef ft::reverse_iterator<iterator> 										reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> 								const_reverse_iterator;
 
 
 	private:
 
-		node_pointer _root;
-		node_pointer _nil;
-		node_allocator _nodeAllocator;
-		allocator_type _valAllocator;
-		value_compare _comp;
-		size_type _size;
+		node_pointer 						_root;
+		node_pointer 						_nil;
+		node_allocator 						_nodeAllocator;
+		allocator_type 						_valAllocator;
+		value_compare 						_comp;
+		size_type 							_size;
 
 	public:
 
@@ -53,7 +53,7 @@ namespace ft
 		RBTree(const value_compare &comp = value_compare()) : _comp(comp), _size(0)
 		{
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, node());
+			_nodeAllocator.construct(newNode, node(_makeValue()));
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -412,48 +412,58 @@ namespace ft
 			if (col == 'B')
 				_deleteFix(x);
 			_nil->parent = _root;
-			//_setNils();
 		}
 
 
 	public:
 
-		node_pointer findNext(const value_type &val) const
+
+		iterator lowerBound(const value_type &val)
 		{
-			node_pointer y;
-			node_pointer tmp = _findKey(_root, val);
-			node_pointer max = _treeMax(_root);
-			if (tmp == _nil)
-				return (max);
-			if (tmp->right != _nil)
-				return (_treeMin(tmp->right));
-			y = tmp->parent;
-			while (y != _nil && tmp == y->right)
+			iterator pos = begin();
+			iterator end(_nil);
+			for (; pos != end; ++pos)
 			{
-				tmp = y;
-				y = y->parent;
+				if (!(_comp(*pos, val)))
+					return (pos);
 			}
-			return (y);
+			return (end);
 		}
 
-		node_pointer findPrev(const value_type &val) const
+		const_iterator lowerBound(const value_type &val) const
 		{
-			node_pointer y;
-			node_pointer tmp = _findKey(_root, val);
-			node_pointer min = _treeMin(_root);
-			if (tmp == _treeMax(tmp))
-				return (tmp);
-			if (tmp == _nil)
-				return (min);
-			if (tmp->left != _nil)
-				return (_treeMax(tmp->left));
-			y = tmp->parent;
-			while (y != _nil && tmp == y->left)
+			const_iterator end = cend();
+			const_iterator pos = cbegin();
+			for (; pos != end; ++pos)
 			{
-				tmp = y;
-				y = y->parent;
+				if (!(_comp(*pos, val)))
+					return (pos);
 			}
-			return (y);
+			return (end);
+		}
+
+		iterator upperBound(const value_type &val)
+		{
+			iterator end(_nil);
+			iterator pos = begin();
+			for (; pos != end; ++pos)
+			{
+				if (_comp(val, *pos))
+					return (pos);
+			}
+			return (end);
+		}
+
+		const_iterator upperBound(const value_type &val) const
+		{
+			const_iterator end = cend();
+			const_iterator pos = cbegin();
+			for (; pos != end; ++pos)
+			{
+				if (_comp(val, *pos))
+					return (pos);
+			}
+			return (end);
 		}
 
 		node_pointer insert(const value_type &val) //TODO return iterator?
@@ -477,7 +487,6 @@ namespace ft
 			return (newNode);
 		}
 
-
 		node_pointer find(const value_type &key) const
 		{
 			node_pointer res = _findKey(_root, key);
@@ -491,6 +500,11 @@ namespace ft
 				_delete(toDel);
 		}
 
+		void clear()
+		{
+			_clearTree();
+			_deleteNode(_nil);
+		}
 
 		size_type size() const
 		{
@@ -505,6 +519,11 @@ namespace ft
 		size_type max_size() const
 		{
 			return (_nodeAllocator.max_size());
+		}
+
+		allocator_type getAllocator()
+		{
+			return (_valAllocator);
 		}
 
 		iterator begin()
@@ -569,8 +588,8 @@ namespace ft
 			std::cout << "size is " << size() << std::endl;
 			std::cout << "max size is " << max_size() << std::endl;
 			ft::pair<int, int> x = ft::make_pair(27, 27);
-			node_pointer prev = findPrev(x);
-			std::cout << "lower " << prev->value->first << " " << prev->value->second << std::endl;
+		//	node_pointer prev = findPrev(x);
+		//	std::cout << "lower " << prev->value->first << " " << prev->value->second << std::endl;
 		//	node_pointer next = findNext(x);
 		//	std::cout << "upper " << next->value->first << " " << next->value->second << std::endl;
 		}
