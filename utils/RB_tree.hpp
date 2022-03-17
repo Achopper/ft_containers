@@ -136,7 +136,6 @@ namespace ft
 			if (_root == _nil)
 			{
 				_root = newNode;
-				//_setNils();
 				return newNode;
 			}
 			if (_comp(*root->value, *newNode->value))
@@ -167,14 +166,14 @@ namespace ft
 		node_pointer _treeMin(node_pointer root) const
 		{
 
-			while (root &&  root->left != _nil)
+			while (root != _nil &&  root->left != _nil)
 				root = root->left;
 			return root;
 		}
 
 		node_pointer _treeMax(node_pointer root) const
 		{
-			while (root && root->right != _nil)
+			while (root != _nil && root->right != _nil)
 				root = root->right;
 			return root;
 		}
@@ -466,7 +465,7 @@ namespace ft
 			return (end);
 		}
 
-		node_pointer insert(const value_type &val) //TODO return iterator?
+		node_pointer insert(const value_type &val) //TODO dell find!
 		{
 			node_pointer find;
 			if ((find = _findKey(_root, val)) != _nil)
@@ -485,6 +484,30 @@ namespace ft
 			_root->color = 'B';
 			++_size;
 			return (newNode);
+		}
+
+		iterator insert(iterator position, const value_type &val)
+		{
+			node_pointer pos = find(*position.base()->value);
+			node_pointer newNode = _nodeAllocator.allocate(1);
+			_nodeAllocator.construct(newNode, node(_makeValue(val)));
+			newNode->left = _nil;
+			newNode->right = _nil;
+			newNode->parent = _nil;
+			newNode->isNil = false;
+			newNode->color = 'R';
+			if (pos != _nil && _comp(val, *pos->value) && find(val) == _nil)
+			{
+				++_size;
+				return (iterator(_insert(position.base(), newNode)));
+			}
+			else
+				return (iterator(insert(val)));
+		}
+
+		value_compare getValCompare()
+		{
+			return (_comp);
 		}
 
 		node_pointer find(const value_type &key) const
@@ -607,6 +630,8 @@ namespace ft
 		}
 
 	};
+
+	//TODO swap
 
 }
 

@@ -38,13 +38,12 @@ CMakeLists.txt
 a.out.dSYM
 tst.cpp
 
-<<<<<<< HEAD
 #vs code files
 .vs
 Debug/
-=======
 # VS files
 .vs
+ft_containers-unit-test
 Debug
 ft_containers.sln
 ft_containers.vcxproj

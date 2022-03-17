@@ -152,12 +152,13 @@ template <class K, class V>
 		Node& operator=(const Node& obj)
 		{
 			if (this == &obj)
-				return (*this);
-			value = obj.val;
-			left = obj.left;
-			right = obj.right;
-			parent = obj.parent;
-			color = obj.color;
+			{
+				value = obj.val;
+				left = obj.left;
+				right = obj.right;
+				parent = obj.parent;
+				color = obj.color;
+			}
 			return (*this);
 		}
 

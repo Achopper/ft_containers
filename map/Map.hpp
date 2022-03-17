@@ -58,12 +58,13 @@ namespace ft
 		typedef typename tree::const_iterator 								const_iterator;
 		typedef typename tree::reverse_iterator 							reverse_iterator;
 		typedef typename tree::const_reverse_iterator 						const_reverse_iterator;
-		tree 							_mapTree;
+
 	private:
 
-
+		tree 							_mapTree;
 		key_compare 					_comp;
 		allocator_type					_alloc;
+
 
 	public:
 
@@ -75,7 +76,6 @@ namespace ft
 				  _alloc(alloc)
 		{
 		}
-
 
 		template<class InputIterator>
 		map(InputIterator first, InputIterator last,
@@ -91,12 +91,27 @@ namespace ft
 				_mapTree.insert(*first);
 				++first;
 			}
-
 		}
 
 		map(const map &x)
 		{
 			*this = x;
+		}
+
+		map& operator=(const map &obj)
+		{
+			if (this == &obj)
+			{
+				_mapTree = obj->_mapTree;
+				_comp = obj->_comp;
+				_alloc = obj->_alloc;
+			}
+			return (*this);
+		}
+
+		mapped_type& operator[] (const key_type& k)
+		{
+			return 	(_mapTree.insert(make_pair(k, mapped_type()))->value->second);
 		}
 
 		iterator begin() { return _mapTree.begin(); }
@@ -136,15 +151,127 @@ namespace ft
 			return (_mapTree.size());
 		}
 
+		iterator lower_bound (const key_type& k)
+		{
+			return (_mapTree.lowerBound(ft::make_pair(k, mapped_type())));
+		}
+
+		const_iterator lower_bound (const key_type& k) const
+		{
+			return (_mapTree.lowerBound(ft::make_pair(k, mapped_type())));
+		}
+
+		iterator upper_bound (const key_type& k)
+		{
+			return (_mapTree.upperBound(ft::make_pair(k, mapped_type())));
+		}
+
+		const_iterator upper_bound (const key_type& k) const
+		{
+			return (_mapTree.upperBound(ft::make_pair(k, mapped_type())));
+		}
 
 		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 		{
-
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
 		}
+
 		pair<iterator,iterator>             equal_range (const key_type& k)
 		{
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
+		}
+
+		void erase (iterator position)
+		{
+			iterator tmp = find(position->first);
+			if (tmp != end())
+				_mapTree.erase(tmp);
+		}
+
+		size_type erase (const key_type& k)
+		{
+			iterator tmp = find(k);
+			if (tmp != end())
+			{
+				_mapTree.erase(*tmp);
+				return (1);
+			}
+			return (0);
+		}
+
+		template<class iterator>
+		void erase (iterator first, iterator last, typename
+		ft::enable_if<!ft::is_integral<iterator>::value>::type * = 0)
+		{
+			while (first != last)
+			{
+				erase(first->first);
+				++first;
+			}
 
 		}
+
+		allocator_type get_allocator() const
+		{
+			return (_alloc);
+		}
+
+		key_compare key_comp() const
+		{
+			return (_comp);
+		}
+
+
+		value_compare value_comp() const
+		{
+			return (_mapTree.getValCompare());
+		}
+
+		size_type max_size() const
+		{
+			return (_mapTree.max_size());
+		}
+
+		void swap (map& x)
+		{
+			_mapTree.swap(x._mapTree);
+			std::swap(_alloc, x._alloc);
+			std::swap(_comp, x._comp);
+		}
+
+
+		pair<iterator,bool> insert (const value_type& val)
+		{
+			iterator f = find(val.first);
+			bool find = !(f.base()->isNil);
+			return (find
+				? ft::make_pair(f, false)
+				: ft::make_pair(iterator(_mapTree.insert(val)), true));
+		}
+
+		iterator insert (iterator position, const value_type& val)
+		{
+			return (iterator(_mapTree.insert(position,ft::make_pair(val))));
+		}
+
+		template <class InputIterator>
+		void insert (InputIterator first, InputIterator last,
+					 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
+		{
+			while(first != last)
+			{
+				_mapTree.insert(*first);
+				++first;
+			}
+		}
+
+		//TODO del
+
+		void printTree()
+		{
+			_mapTree.print_tree();
+		}
+
 	};
 
 }
