@@ -50,22 +50,60 @@ namespace ft
 	public:
 
 
-		RBTree(const value_compare &comp = value_compare()) : _comp(comp), _size(0)
+		RBTree() :
+		_nodeAllocator(node_allocator()),
+		_valAllocator(allocator_type()),
+		_comp(value_compare()),
+		_size(0)
 		{
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, node(_makeValue()));
+			_nodeAllocator.construct(newNode, Node<value_type>());
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
 			_root = _nil;
 		}
 
-		RBTree(const RBTree &obj)
+		RBTree(const value_compare &comp, const allocator_type &alloc = allocator_type())
+		:
+		_nodeAllocator(node_allocator()),
+		_valAllocator(alloc),
+		_comp(comp)
+		{
+			node_pointer newNode = _nodeAllocator.allocate(1);
+			_nodeAllocator.construct(newNode,  Node<value_type>());
+			_nil = newNode;
+			_nil->isNil = true;
+			_nil->color = 'B';
+			_root = _nil;
+		}
+
+		template<class InputIterator>
+		RBTree(typename ft::enable_if< !ft::is_integral<InputIterator>::value, InputIterator >::type first, InputIterator last,
+		const value_compare &comp,
+		const allocator_type &alloc = allocator_type()
+		)
+		:
+			_nodeAllocator(node_allocator()),
+			_valAllocator(alloc),
+			_comp(comp)
+		{
+			node_pointer newNode = _nodeAllocator.allocate(1);
+			_nodeAllocator.construct(newNode,  Node<value_type>());
+			_nil = newNode;
+			_nil->isNil = true;
+			_nil->color = 'B';
+			_root = _nil;
+			for (; first != last; ++first)
+				insert(*first);
+		}
+
+		RBTree(const RBTree &obj) :
+		_comp(obj._comp)
 		{
 			*this = obj;
 		}
 
-		//assign
 
 		~RBTree()
 		{
@@ -77,9 +115,11 @@ namespace ft
 		{
 			if (this == &obj)
 				return (*this);
-			if (this->_root != _nil)
+			if (this->_root != _nil && _root)
+			{
 				_clearTree(this->_root);
-			_deleteNode(_nil);
+				_deleteNode(_nil);
+			}
 			_nodeAllocator = obj._nodeAllocator;
 			_valAllocator = obj._valAllocator;
 			_comp = obj._comp;
@@ -156,12 +196,6 @@ namespace ft
 			_nil->parent = _root;
 			return (newNode);
 		}
-
-//		void _setNils()
-//		{
-//			_nil->left = _treeMin(_root);
-//			_nil->right = _treeMax(_root);
-//		}
 
 		node_pointer _treeMin(node_pointer root) const
 		{
@@ -502,7 +536,10 @@ namespace ft
 				return (iterator(_insert(position.base(), newNode)));
 			}
 			else
+			{
+				_deleteNode(newNode);
 				return (iterator(insert(val)));
+			}
 		}
 
 		value_compare getValCompare()

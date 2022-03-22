@@ -2,8 +2,8 @@ NAME = mapTest.cpp
 
 all:
 	sed 's/ft::/std::/g' $(NAME) > std_$(NAME)
-	clang++ -Wall -Wextra -Werror mapTest.cpp  -o my.out
-	clang++ -Wall -Wextra -Werror std_mapTest.cpp  -o std.out
+	clang++  -std=c++11 -Wall -Wextra -Werror mapTest.cpp  -o my.out
+	clang++  -std=c++11 -Wall -Wextra -Werror std_mapTest.cpp  -o std.out
 
 test: all
 	@echo "STD"

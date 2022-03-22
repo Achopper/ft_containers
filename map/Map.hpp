@@ -27,7 +27,7 @@ namespace ft
 		typedef Key 										key_type;
 		typedef T 											mapped_type;
 		typedef ft::pair<const key_type, mapped_type> 		value_type;
-		typedef Compare key_compare;
+		typedef Compare 									key_compare;
 		typedef Allocator 									allocator_type;
 		typedef value_type 									&reference;
 		typedef const value_type							&const_reference;
@@ -71,7 +71,7 @@ namespace ft
 		map(const key_compare &comp = key_compare(),
 			const allocator_type &alloc = allocator_type())
 				:
-				  _mapTree(value_compare(comp)),
+				  _mapTree(tree(comp, alloc)),
 				  _comp(comp),
 				  _alloc(alloc)
 		{
@@ -80,20 +80,22 @@ namespace ft
 		template<class InputIterator>
 		map(InputIterator first, InputIterator last,
 			const key_compare &comp = key_compare(),
-			const allocator_type &alloc = allocator_type(),
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0) :
-			    _mapTree(value_compare(comp)),
+			const allocator_type &alloc = allocator_type())
+			:
+			    _mapTree(tree(first, last, comp, alloc)),
 				_comp(comp),
 				_alloc(alloc)
 		{
-			while (first != last)
-			{
-				_mapTree.insert(*first);
-				++first;
-			}
+//			while (first != last)
+//			{
+//				_mapTree.insert(*first);
+//				++first;
+//			}
 		}
 
-		map(const map &x)
+		map(const map &x) :
+		_mapTree(x._mapTree),
+		_comp(x._comp)
 		{
 			*this = x;
 		}
@@ -102,9 +104,9 @@ namespace ft
 		{
 			if (this == &obj)
 			{
-				_mapTree = obj->_mapTree;
-				_comp = obj->_comp;
-				_alloc = obj->_alloc;
+				_mapTree = obj._mapTree;
+				_comp = obj._comp;
+				_alloc = obj._alloc;
 			}
 			return (*this);
 		}

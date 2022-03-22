@@ -37,6 +37,7 @@ CMakeLists.txt
 .idea
 a.out.dSYM
 tst.cpp
+.DS_Store
 
 #vs code files
 .vs

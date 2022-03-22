@@ -15,24 +15,141 @@
 #include <iterator>
 #include <vector>
 
-class A
+class D
 {
 public:
 	int a;
-	A() : a(5) {}
+	D() : a(5) {}
 };
 
-class B
+class F
 {
 public:
 	int c;
-	B(int x) : c(x) {}
+	F(int x) : c(x) {}
 };
 
 void splitter(std::string spl)
 {
 	std::cout << GREENCOL << "------------------------------------------------------------------" << spl
 						  << "------------------------------------------------------------------" << RESCOL <<std::endl;
+}
+
+class B {
+public:
+	char *l;
+	int i;
+	B():l(nullptr), i(1) {};
+	B(const int &ex) {
+		this->i = ex;
+		this->l = new char('a');
+	};
+	virtual ~B() {
+		delete this->l;
+		this->l = nullptr;
+	};
+};
+
+class A : public B {
+public:
+	A():B(){};
+	A(const B* ex){
+		this->l = new char(*(ex->l));
+		this->i = ex->i;
+		if (ex->i == -1) throw "n";
+	}
+	~A() {
+		delete this->l;
+		this->l = nullptr;
+	};
+};
+
+template <typename T>
+ft::vector<int> swap_test(ft::vector<T> vector) {
+	ft::vector<int> v;
+	vector.assign(1100 * 10000, 11);
+	ft::vector<int> tmp(500 * 10000, 5), tmp2(1000 * 10000, 10), tmp3(1500 * 10000, 15), tmp4(3000 * 10000, 30);
+	v.push_back(vector[2]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	long *adr1 = reinterpret_cast<long *>(&vector);
+	long *adr2 = reinterpret_cast<long *>(&tmp);
+	vector.swap(tmp);
+	if (reinterpret_cast<long *>(&vector) == adr1 && reinterpret_cast<long *>(&tmp) == adr2)
+		v.push_back(1);
+	v.push_back(vector[2]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	vector.swap(tmp3);
+	v.push_back(vector[2]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	ft::swap(vector, tmp2);
+	v.push_back(vector[2]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	ft::swap(vector, tmp4);
+	v.push_back(vector[2]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	for (const auto &i : v)
+		std::cout << i;
+	std::cout << std::endl;
+	return v;
+}
+
+
+template <typename T>
+ft::vector<T> insert_test_1(ft::vector<T> vector) {
+	ft::vector<int> v;
+	vector.assign(2 * 1, 1);
+
+	v.push_back(*(vector.insert(vector.end() - 1 * 1, 44)));
+	auto it = vector.end() - 1;
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	std::unique_ptr<B> k2(new B(3));
+	std::unique_ptr<B> k3(new B(4));
+	std::unique_ptr<B> k4(new B(-1));
+	ft::vector<A> vv;
+	ft::vector<B*> v1;
+
+	v1.push_back(&(*k2));
+	v1.push_back(&(*k3));
+	v1.push_back(&(*k4));
+	try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
+	catch (...) {
+		v.push_back(vv.size());
+		v.push_back(vv.capacity());
+	}
+	for (const auto &i : vv)
+		std::cout << i.l;
+	std::cout << std::endl;
+	for (const auto &i : v)
+		std::cout << i;
+	std::cout << std::endl;
+	for (const auto &i : v1)
+		std::cout << i->l;
+	std::cout << std::endl;
+	return v;
+}
+
+template <typename T>
+ft::vector<int> insert_test_3(ft::vector<T> vector) {
+	ft::vector<int> v;
+	ft::vector<int> tmp;
+	tmp.assign(26 * 1, 1);
+	vector.assign(42 * 1, 1);
+	vector.insert(vector.end() - 1 * 1, tmp.begin(), tmp.end());
+	v.push_back(vector[3]);
+	v.push_back(vector.size());
+	v.push_back(vector.capacity());
+	for (const auto &i : vector)
+		std::cout << i;
+	for (const auto &i : v)
+		std::cout << i;
+	std::cout << std::endl;
+	return v;
 }
 
 template <class T>
@@ -262,7 +379,7 @@ void insertTest()
 
 	ft::vector<int> myVec1;
 	ft::vector<int> vec1;
-	fillVector(vec1, myVec1, 1000000);
+	fillVector(vec1, myVec1, 10);
 
 	printVec(vec1, myVec1);
 
@@ -301,7 +418,7 @@ void insertTest()
 
 	printVec(vec1, myVec1);
 
-	std::cout << "value at return iterators. my : " << *it << " std : " << *stdIt << std::endl;
+	//std::cout << "value at return iterators. my : " << *it << " std : " << *stdIt << std::endl;
 
 	splitter("RANGE TEST");
 
@@ -396,7 +513,7 @@ void eraseTest()
 	splitter("SINGLE TEST");
 	ft::vector<int> myVec1;
 	ft::vector<int> vec1;
-	fillVector(vec1, myVec1, 1000000);
+	fillVector(vec1, myVec1, 10);
 	ft::vector<int>::iterator it1 = vec1.begin();
 	ft::vector<int>::iterator it2 = vec1.end() - 1;
 	ft::vector<int>::iterator mit1 = myVec1.begin();
@@ -493,11 +610,12 @@ void revIterTest()
 
 int main()
 {
-	A a;
-	A b;
+
+	D a;
+	D b;
 	b.a = 15;
-	ft::vector<A> myVec(10);
-	ft::vector<A> myVec1(20, b);
+	ft::vector<D> myVec(10);
+	ft::vector<D> myVec1(20, b);
 	ft::vector<int>x((ft::vector<int>()));
 	myVec.swap(myVec1);
 	myVec = myVec1;
@@ -524,5 +642,12 @@ int main()
 	eraseTest();
 	compareTest();
 	revIterTest();
+
+	ft::vector<int> k;
+	insert_test_1(k);
+	ft::vector<int> kk;
+	insert_test_3(kk);
+	swap_test(k);
+	std::vector<int> v;
 	return (0);
 }

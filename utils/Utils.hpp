@@ -128,7 +128,7 @@ template <class K, class V>
 
 		//Node() : value(value_type()), color(0) {}
 
-		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), color('B') {}
+		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), isNil(false), color('B') {}
 
 		Node(Node *l, Node *r, Node *p, char col, const value_type &val)
 				:
@@ -158,6 +158,7 @@ template <class K, class V>
 				right = obj.right;
 				parent = obj.parent;
 				color = obj.color;
+				isNil = obj.isNil;
 			}
 			return (*this);
 		}
