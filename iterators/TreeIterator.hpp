@@ -34,14 +34,16 @@ namespace ft
 
 		node_pointer _getMin(node_pointer ptr) const
 		{
-			while (!ptr->left->isNil)
+			while (ptr->left && !ptr->left->isNil)
+			{
 				ptr = ptr->left;
+			}
 			return (ptr);
 		}
 
 		node_pointer _getMax(node_pointer ptr) const
 		{
-			while (!ptr->right->isNil)
+			while (ptr->right && !ptr->right->isNil )
 				ptr = ptr->right;
 			return (ptr);
 		}
@@ -94,8 +96,9 @@ namespace ft
 
 		TreeIterator& operator++()
 		{
-			node_pointer y;
-			if (!_ptr->right->isNil)
+			node_pointer y = NULL;
+
+			if (_ptr->right != NULL && !_ptr->right->isNil)
 				_ptr = _getMin(_ptr->right);
 			else
 			{
@@ -107,6 +110,7 @@ namespace ft
 				}
 				_ptr = y;
 			}
+
 			return (*this);
 		}
 
@@ -119,7 +123,7 @@ namespace ft
 
 		TreeIterator& operator--()
 		{
-			node_pointer y;
+			node_pointer y = NULL;
 			if (_ptr->isNil)
 			{
 				_ptr = _getMax(_ptr->parent);

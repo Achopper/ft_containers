@@ -50,14 +50,15 @@ namespace ft
 	public:
 
 
-		RBTree() :
+		RBTree()
+		:
 		_nodeAllocator(node_allocator()),
 		_valAllocator(allocator_type()),
 		_comp(value_compare()),
 		_size(0)
 		{
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, Node<value_type>());
+			_nodeAllocator.construct(newNode, _makeValue());
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -68,10 +69,11 @@ namespace ft
 		:
 		_nodeAllocator(node_allocator()),
 		_valAllocator(alloc),
-		_comp(comp)
+		_comp(comp),
+		_size(0)
 		{
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode,  Node<value_type>());
+			_nodeAllocator.construct(newNode, _makeValue());
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -86,10 +88,13 @@ namespace ft
 		:
 			_nodeAllocator(node_allocator()),
 			_valAllocator(alloc),
-			_comp(comp)
+			_comp(comp),
+			_size(0)
 		{
+//			if (&first > &last)
+//				throw std::logic_error("");
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode,  Node<value_type>());
+			_nodeAllocator.construct(newNode,  _makeValue());
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -99,7 +104,9 @@ namespace ft
 		}
 
 		RBTree(const RBTree &obj) :
-		_comp(obj._comp)
+		_root(NULL),
+		_comp(obj._comp),
+		_size(0)
 		{
 			*this = obj;
 		}
@@ -115,16 +122,16 @@ namespace ft
 		{
 			if (this == &obj)
 				return (*this);
-			if (this->_root != _nil && _root)
+			if (_root != _nil && _root)
 			{
 				_clearTree(this->_root);
-				_deleteNode(_nil);
 			}
+			_deleteNode(_nil);
 			_nodeAllocator = obj._nodeAllocator;
 			_valAllocator = obj._valAllocator;
 			_comp = obj._comp;
 			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, node());
+			_nodeAllocator.construct(newNode, _makeValue());
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -178,17 +185,17 @@ namespace ft
 				_root = newNode;
 				return newNode;
 			}
-			if (_comp(*root->value, *newNode->value))
-			{
-				if (root->right != _nil)
-					return (_insert(root->right, newNode));
-				root->right = newNode;
-			}
-			else
+			if (_comp(*newNode->value, *root->value))
 			{
 				if (root->left != _nil)
 					return (_insert(root->left, newNode));
 				root->left = newNode;
+			}
+			else
+			{
+				if (root->right != _nil)
+					return (_insert(root->right, newNode));
+				root->right = newNode;
 			}
 			newNode->parent = root;
 			_insertFixup(newNode);
@@ -227,44 +234,44 @@ namespace ft
 
 		void _rotateLeft(node_pointer node)
 		{
-			node_pointer right = node->right;
-			node->right = right->left;
+			node_pointer y = node->right;
+			node->right = y->left;
 
 			if (node->left != _nil)
-				right->left->parent = node;
+				y->left->parent = node;
 
-			right->parent = node->parent;
+			y->parent = node->parent;
 
 			if (node->parent == _nil)
-				_root = right;
+				_root = y;
 			else if (node == node->parent->left)
-				node->parent->left = right;
+				node->parent->left = y;
 			else
-				node->parent->right = right;
+				node->parent->right = y;
 
-			right->left = node;
-			node->parent = right;
+			y->left = node;
+			node->parent = y;
 		}
 
 		void _rotateRight(node_pointer node)
 		{
-			node_pointer left = node->left;
-			node->left = left->right;
+			node_pointer y = node->left;
+			node->left = y->right;
 
-			if (node->left != _nil)
-				left->left->parent = node;
+			if (node->right != _nil)
+				y->right->parent = node;
 
-			left->parent = node->parent;
+			y->parent = node->parent;
 
 			if (node->parent == _nil)
-				_root = left;
+				_root = y;
 			else if (node == node->parent->left)
-				node->parent->left = left;
+				node->parent->left = y;
 			else
-				node->parent->right = left;
+				node->parent->right = y;
 
-			left->right = node;
-			node->parent = left;
+			y->right = node;
+			node->parent = y;
 		}
 
 
@@ -273,7 +280,7 @@ namespace ft
 			node_pointer uncle;
 			if (newNode != _root && newNode->parent != _root)
 			{
-				while (newNode->parent->color == 'R')
+				while (newNode != _root && newNode->parent->color == 'R')
 				{
 					if (newNode->parent == newNode->parent->parent->left)
 					{
@@ -326,7 +333,7 @@ namespace ft
 
 		void _rbTrpl(node_pointer x, node_pointer y)
 		{
-			if (x->parent == _nil)
+			if (x == _root)
 				_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
@@ -407,43 +414,44 @@ namespace ft
 			node->color = 'B';
 		}
 
-		void _delete(node_pointer node)
+		void _delete(node_pointer z)
 		{
 			node_pointer x;
-			node_pointer y = node;
+			node_pointer y = z;
+			node_pointer toD = z;
 			char col = y->color;
-			if (node->left == _nil)
+			if (z->left == _nil)
 			{
-				x = node->right;
-				_rbTrpl(node, node->right);
+				x = z->right;
+				_rbTrpl(z, z->right);
 			}
-			else if (node->right == _nil)
+			else if (z->right == _nil)
 			{
-				x = node->left;
-				_rbTrpl(node, node->left);
+				x = z->left;
+				_rbTrpl(z, z->left);
 			}
 			else
 			{
-				y = _treeMin(node->right);
+				y = _treeMin(z->right);
 				col = y->color;
 				x = y->right;
-				if (y->parent == node)
+				if (y->parent == z)
 					x->parent = y;
 				else
 				{
 					_rbTrpl(y, y->right);
-					y->right = node->right;
+					y->right = z->right;
 					y->right->parent = y;
 				}
-				_rbTrpl(node, y);
-				y->left = node->left;
+				_rbTrpl(z, y);
+				y->left = z->left;
 				y->left->parent = y;
-				y->color = node->color;
+				y->color = z->color;
 			}
-			_deleteNode(node);
-			--_size;
 			if (col == 'B')
 				_deleteFix(x);
+			_deleteNode(toD);
+			--_size;
 			_nil->parent = _root;
 		}
 
@@ -499,12 +507,11 @@ namespace ft
 			return (end);
 		}
 
-		node_pointer insert(const value_type &val) //TODO dell find!
+		node_pointer insert(const value_type &val)
 		{
 			node_pointer find;
 			if ((find = _findKey(_root, val)) != _nil)
 			{
-				std::cout << "find it!" << std::endl;
 				return (find);
 			}
 			node_pointer newNode = _nodeAllocator.allocate(1);
@@ -512,10 +519,12 @@ namespace ft
 			newNode->left = _nil;
 			newNode->right = _nil;
 			newNode->parent = _nil;
+			newNode->nil = _nil;
 			newNode->isNil = false;
 			newNode->color = 'R';
 			_insert(_root, newNode);
 			_root->color = 'B';
+			_nil->parent = _root;
 			++_size;
 			return (newNode);
 		}
@@ -547,23 +556,40 @@ namespace ft
 			return (_comp);
 		}
 
+		node_pointer find(const value_type &key)
+		{
+			node_pointer res = _findKey(_root, key);
+			return (res == _nil ? _treeMax(res) : res);
+		}
+
 		node_pointer find(const value_type &key) const
 		{
 			node_pointer res = _findKey(_root, key);
 			return (res == _nil ? _treeMax(res) : res);
 		}
 
-		void erase(const value_type &key)
+		size_type erase(const value_type &key)
 		{
 			node_pointer toDel = _findKey(_root, key);
 			if (toDel != _nil)
+			{
 				_delete(toDel);
+				return (1);
+			}
+			return (0);
+		}
+
+		template<class iterator>
+		void erase (typename ft::enable_if< !ft::is_integral<iterator>::value, iterator >::type first, iterator last)
+		{
+			for (; first != last; )
+				erase(*first++);
 		}
 
 		void clear()
 		{
-			_clearTree();
-			_deleteNode(_nil);
+			_clearTree(_root);
+			_root = _nil;
 		}
 
 		size_type size() const
@@ -591,12 +617,22 @@ namespace ft
 			return (iterator(_treeMin(_root)));
 		}
 
+		iterator begin() const
+		{
+			return (iterator(_treeMin(_root)));
+		}
+
 		const_iterator cbegin() const
 		{
 			return (const_iterator(_treeMin(_root)));
 		}
 
 		iterator end()
+		{
+			return (iterator(_nil));
+		}
+
+		iterator end() const
 		{
 			return (iterator(_nil));
 		}
@@ -608,22 +644,22 @@ namespace ft
 
 		reverse_iterator rbegin()
 		{
-			return (iterator(_treeMin(_root)));
+			return (iterator(_nil));
 		}
 
 		const_reverse_iterator crbegin() const
 		{
-			return (const_iterator(_treeMin(_root)));
+			return (const_iterator(_nil));
 		}
 
 		reverse_iterator rend()
 		{
-			return (iterator(_nil));
+			return (iterator(_treeMin(_root)));
 		}
 
 		const_reverse_iterator crend() const
 		{
-			return (const_iterator(_nil));
+			return (const_iterator(_treeMin(_root)));
 		}
 
 		void swap(const RBTree &obj)

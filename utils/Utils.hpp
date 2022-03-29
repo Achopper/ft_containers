@@ -23,6 +23,19 @@
 
 namespace ft {
 
+	template <class Arg1, class Arg2, class Result>
+	struct binary_function
+	{
+		/* The first argument type */
+		typedef Arg1 first_argument_type;
+
+		/* The second arguement type */
+		typedef Arg2 second_argument_type;
+
+		/* The result type */
+		typedef Result result_type;
+	};
+
 //------------------------PAIR--------------------------------------
 
 template<class K, class V>
@@ -123,19 +136,22 @@ template <class K, class V>
 		Node					*left;
 		Node					*right;
 		Node					*parent;
+		Node					*nil;
 		bool 					isNil;
 		char					color;
 
 		//Node() : value(value_type()), color(0) {}
 
-		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), isNil(false), color('B') {}
+		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), nil(NULL), isNil(false), color
+		('B') {}
 
-		Node(Node *l, Node *r, Node *p, char col, const value_type &val)
+		Node(Node *l, Node *r, Node *p, Node *nil, char col, const value_type &val)
 				:
 				value(val),
 				left(l),
 				right(r),
 				parent(p),
+				nil(nil),
 				color(col)
 		{}
 
@@ -151,7 +167,7 @@ template <class K, class V>
 
 		Node& operator=(const Node& obj)
 		{
-			if (this == &obj)
+			if (this != &obj)
 			{
 				value = obj.val;
 				left = obj.left;

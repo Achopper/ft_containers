@@ -2,7 +2,7 @@ NAME = mapTest.cpp
 
 all:
 	sed 's/ft::/std::/g' $(NAME) > std_$(NAME)
-	clang++  -std=c++11 -Wall -Wextra -Werror mapTest.cpp  -o my.out
+	clang++  -std=c++11 -Wall -Wextra -Werror  mapTest.cpp  -o my.out
 	clang++  -std=c++11 -Wall -Wextra -Werror std_mapTest.cpp  -o std.out
 
 test: all
@@ -18,7 +18,7 @@ test: all
 	@cat diff.txt
 
 leaks:
-	clang++ -Wall -Wextra -Werror mapTest.cpp -o my.out && leaks --atExit -- ./my.out
+	clang++ -std=c++11 -Wall -Wextra -Werror mapTest.cpp -o my.out && leaks --atExit -- ./my.out
 
 clean:
 	rm my.out std.out std_mapTest.cpp std.txt my.txt diff.txt

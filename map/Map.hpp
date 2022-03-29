@@ -39,12 +39,10 @@ namespace ft
 
 		class value_compare
 		{
-		protected:
+		private:
 			key_compare 									_comp;
 		public:
-			value_compare(const key_compare& comp) : _comp(comp)
-			{}
-
+			value_compare(const key_compare& comp) : _comp(comp) {}
 			bool operator()(const value_type &x, const value_type &y) const
 			{
 				return (_comp(x.first, y.first));
@@ -94,7 +92,7 @@ namespace ft
 		}
 
 		map(const map &x) :
-		_mapTree(x._mapTree),
+		_mapTree(tree(key_compare(), allocator_type())),
 		_comp(x._comp)
 		{
 			*this = x;
@@ -102,7 +100,7 @@ namespace ft
 
 		map& operator=(const map &obj)
 		{
-			if (this == &obj)
+			if (this != &obj)
 			{
 				_mapTree = obj._mapTree;
 				_comp = obj._comp;
@@ -117,8 +115,10 @@ namespace ft
 		}
 
 		iterator begin() { return _mapTree.begin(); }
+		iterator begin() const { return _mapTree.begin(); }
 		const_iterator cbegin() const { return _mapTree.cbegin(); }
 		iterator end() { return _mapTree.end(); }
+		iterator end() const { return _mapTree.end(); }
 		const_iterator cend() const { return _mapTree.cend(); }
 		reverse_iterator rbegin() { return _mapTree.rbegin(); }
 		reverse_iterator rend() { return _mapTree.rend(); }
@@ -187,30 +187,18 @@ namespace ft
 		{
 			iterator tmp = find(position->first);
 			if (tmp != end())
-				_mapTree.erase(tmp);
+				_mapTree.erase(*tmp);
 		}
 
-		size_type erase (const key_type& k)
+		size_type erase(const key_type& k)
 		{
-			iterator tmp = find(k);
-			if (tmp != end())
-			{
-				_mapTree.erase(*tmp);
-				return (1);
-			}
-			return (0);
+			return (_mapTree.erase(ft::make_pair(k, mapped_type())));
 		}
 
 		template<class iterator>
-		void erase (iterator first, iterator last, typename
-		ft::enable_if<!ft::is_integral<iterator>::value>::type * = 0)
+		void erase (iterator first, iterator last)
 		{
-			while (first != last)
-			{
-				erase(first->first);
-				++first;
-			}
-
+			_mapTree.erase(first, last);
 		}
 
 		allocator_type get_allocator() const
@@ -253,7 +241,7 @@ namespace ft
 
 		iterator insert (iterator position, const value_type& val)
 		{
-			return (iterator(_mapTree.insert(position,ft::make_pair(val))));
+			return (iterator(_mapTree.insert(position, val)));
 		}
 
 		template <class InputIterator>
