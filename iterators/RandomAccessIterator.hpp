@@ -19,7 +19,7 @@
 namespace ft
 {
 	template<class T>
-	class random_access_iterator {
+	class random_access_iterator  {
 
 	public:
 		typedef typename ft::iterator_traits<T*>::difference_type			difference_type;
@@ -27,6 +27,7 @@ namespace ft
 		typedef typename ft::iterator_traits<T*>::value_type				value_type;
 		typedef typename ft::iterator_traits<T*>::reference					reference;
 		typedef ft::random_access_iterator_tag								iterator_category;
+		typedef pointer 													iterator_type;
 
 	private:
 		pointer _ptr;
@@ -47,9 +48,10 @@ namespace ft
 			return (*this);
 		}
 
-		virtual ~random_access_iterator() {}
+		~random_access_iterator() {}
 
-		operator random_access_iterator <const value_type> () const {
+		operator random_access_iterator <const value_type> () const
+		{
 			return random_access_iterator<const value_type>(_ptr);
 		}
 

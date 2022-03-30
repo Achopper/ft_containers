@@ -14,7 +14,6 @@
 #define VECTOR_HPP
 #include "../utils/Utils.hpp"
 #include "../iterators/RandomAccessIterator.hpp"
-#include <iterator>
 #include "../iterators/ReverseIterator.hpp"
 
 
@@ -24,8 +23,8 @@ namespace ft
 	class vector
 	{
 	public:
-		typedef 									std::size_t size_type;
-		typedef 									std::ptrdiff_t difference_type;
+		typedef std::size_t 						size_type;
+		typedef std::ptrdiff_t 						difference_type;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef typename Allocator::pointer 		pointer;
 		typedef Allocator 							allocator_type;
@@ -74,7 +73,10 @@ namespace ft
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type()
-						,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) : _allocator(alloc)
+						,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) :
+						_allocator(alloc),
+						_size(0),
+						_capacity(0)
 		{
 			if (first > last)
 				throw (std::length_error("Vector"));
@@ -85,7 +87,7 @@ namespace ft
 				_allocator.construct(_data + i, *(first + i));
 		}
 
-		vector(const vector &obj) : _size(0), _capacity(0)
+		vector(const vector &obj) : _size(0), _capacity(0), _data(0)
 		{
 			*this = obj;
 		}
@@ -108,7 +110,9 @@ namespace ft
 			if (_capacity < _size)
 			{
 				if (_capacity != 0)
+				{
 					_allocator.deallocate(_data, _capacity);
+				}
 				_capacity = _size;
 				try
 				{
@@ -222,7 +226,7 @@ namespace ft
 				{
 					try
 					{
-						reserve(_capacity << 2 > n ? _capacity << 2 : n);
+						reserve(_capacity << 1 > n ? _capacity << 1 : n); //TODO ? 2 || 1
 					} catch (std::exception &ex)
 					{
 						std::cout << ex.what() << std::endl;
@@ -319,14 +323,63 @@ namespace ft
 			std::swap(_capacity, obj._capacity);
 			std::swap(_size, obj._size);
 			std::swap(_data, obj._data);
+//			allocator_type tmpA = _allocator;
+//			size_type tmpC = _capacity;
+//			size_type tmpS = _size;
+//			pointer tmpD = _data;
+//			_allocator = obj._allocator;
+//			_capacity = obj._capacity;
+//			_size = obj._size;
+//			_data = obj._data;
+//			obj._allocator = tmpA;
+//			obj._capacity = tmpC;
+//			obj._size = tmpS;
+//			obj._data = tmpD;
+
 		}
 
 		iterator insert (iterator position, const value_type& val)
 		{
 			if (position < begin() || position > end())
 				throw std::logic_error("Vector: in insert");
-			insert(position, 1, val);
-			return (position);
+//			insert(position, 1, val);
+//			difference_type start = position - begin();
+//			return (begin() + *position);
+			size_type index = position - begin();
+
+			if (_size == _capacity)
+			{
+				size_type new_cap = (_capacity == 0) ? _capacity + 1 : _capacity << 1;
+				value_type *newAlloc = _allocator.allocate(new_cap);
+				for (size_type i = 0; i < (_size - index); i++)
+					_allocator.construct(newAlloc + i, _data[i]);
+
+				_allocator.construct(newAlloc + index, val);
+
+				for (size_type i = index + 1; i <= _size; i++)
+					_allocator.construct(newAlloc + i, _data[i - 1]);
+
+				for (size_type i = 0; i < _size; i++)
+					_allocator.destroy(_data + i);
+
+				_allocator.deallocate(_data, _capacity);
+
+				_data = newAlloc;
+				_capacity = new_cap;
+			}
+			else
+			{
+				for (size_type i = _size; i > index; i--)
+				{
+					_allocator.destroy(_data + i);
+					_allocator.construct(_data + i, _data[i - 1]);
+				}
+				_allocator.destroy(_data + index);
+				_allocator.construct(_data + index, val);
+			}
+
+			_size++;
+			return begin() + index;
 		}
 
 		void insert(iterator position, size_type n, const value_type& val)
@@ -345,24 +398,34 @@ namespace ft
 				size_type new_cap = (_capacity << 1) > _size + n ? _capacity << 1 : _size + n;
 				try
 				{
-					newPtr = _allocator.allocate(new_cap);
+					try
+					{
+						newPtr = _allocator.allocate(new_cap);
+					}
+					catch (std::bad_alloc &ex)
+					{
+						std::cout << ex.what();
+					}
+					for (; i < start; ++i)
+						_allocator.construct(newPtr + i, _data[i]);
+					for (; i < (start + static_cast<difference_type>(n)); ++i)
+						_allocator.construct(newPtr + i, val);
+					for (; i < static_cast<difference_type>(_size + n); ++i)
+						_allocator.construct(newPtr + i, _data[i - n]);
+					for (size_type i = 0; i < _size; ++i)
+						_allocator.destroy(_data + i);
+					_allocator.deallocate(_data, _capacity);
+					_capacity = new_cap;
+					_size += n;
+					_data = newPtr;
 				}
-				catch (std::bad_alloc &ex)
+				catch (...)
 				{
-					std::cout << ex.what();
+					for (difference_type i = 0; i < n; ++i)
+						_allocator.destroy(newPtr + i);
+					_allocator.deallocate(newPtr, n);
+					throw;
 				}
-				for (; i < start; ++i)
-					_allocator.construct(newPtr + i, _data[i]);
-				for (; i < (start + static_cast<difference_type>(n)); ++i)
-					_allocator.construct(newPtr + i, val);
-				for (; i < static_cast<difference_type>(_size + n); ++i)
-					_allocator.construct(newPtr + i, _data[i - n]);
-				for (size_type i = 0; i < _size; ++i)
-					_allocator.destroy(_data + i);
-				_allocator.deallocate(_data, _capacity);
-				_capacity = new_cap;
-				_size += n;
-				_data = newPtr;
 			}
 			else
 			{
@@ -383,33 +446,43 @@ namespace ft
 			if (position < begin() || position > end() || first > last || last < first)
 				throw std::logic_error("Vector: in range insert");
 			difference_type count = ft::distance(first, last);
-			difference_type start = ft::distance(position, begin());
+			difference_type start = position - begin();
 			if (first == last)
 				return ;
 			else if (_size + count > _capacity)
 			{
 				size_type newCap = (_capacity << 1) > _size + count ? _capacity << 1 : _size + count;;
-				pointer newArr;
+				pointer newPtr;
 				try
 				{
-					newArr = _allocator.allocate(newCap);
+					try
+					{
+						newPtr = _allocator.allocate(newCap);
+					}
+					catch (std::bad_alloc &ex)
+					{
+						std::cout << "bad alloc in vector insert" << std::endl;
+					}
+					for (difference_type i = 0; i < start; ++i)
+						_allocator.construct(newPtr + i, _data[i]);
+					for (difference_type i = start; i <= (start + count); ++i, first++)
+						_allocator.construct(newPtr + i, *first);
+					for (difference_type i = start + count; i < static_cast<difference_type>(_size) + count; ++i)
+						_allocator.construct(newPtr + i, _data[i - count]);
+					for (size_type i = 0; i < _size; ++i)
+						_allocator.destroy(_data + i);
+					_size += count;
+					_allocator.deallocate(_data, _capacity);
+					_capacity = newCap;
+					_data = newPtr;
 				}
-				catch (std::bad_alloc &ex)
+				catch (...)
 				{
-					std::cout << ex.what();
+					for (difference_type i = 0; i < count; ++i)
+						_allocator.destroy(newPtr + i);
+					_allocator.deallocate(newPtr, count);
+					throw;
 				}
-				for (difference_type i = 0; i < start; ++i)
-					_allocator.construct(newArr + i, _data[i]);
-				for (difference_type i = start; i <= (start + count); ++i, first++)
-					_allocator.construct(newArr + i, *first);
-				for (difference_type i = start + count; i < static_cast<difference_type>(_size) + count; ++i)
-					_allocator.construct(newArr + i, _data[i - count]);
-				for (size_type i = 0; i < _size; ++i)
-					_allocator.destroy(_data + i);
-				_size +=  count;
-				_allocator.deallocate(_data, _capacity);
-				_capacity = newCap;
-				_data = newArr;
 			}
 			else
 			{
@@ -428,7 +501,8 @@ namespace ft
 			if (n > _capacity)
 			{
 				clear();
-				_allocator.deallocate(_data, _capacity);
+				if (_data)
+					_allocator.deallocate(_data, _capacity);
 				_data =_allocator.allocate(n);
 				_size = n;
 				_capacity = n;
@@ -539,7 +613,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		if (!lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()))
+		if (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()))
 			return (false);
 		return (true);
 	}
