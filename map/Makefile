@@ -7,10 +7,10 @@ all:
 
 test: all
 	@echo "STD"
-	time -p ./std.out > std.txt
+	@time -p ./std.out > std.txt
 	@echo ""
 	@echo "MY"
-	time -p ./my.out > my.txt
+	@time -p ./my.out > my.txt
 	@echo ""
 	@echo "DIFF"
 	@diff my.txt std.txt > diff.txt

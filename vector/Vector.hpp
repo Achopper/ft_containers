@@ -319,22 +319,22 @@ namespace ft
 
 		void swap(vector &obj)
 		{
-//			std::swap(_allocator, obj._allocator);
-//			std::swap(_capacity, obj._capacity);
-//			std::swap(_size, obj._size);
-//			std::swap(_data, obj._data);
-			allocator_type tmpA = _allocator;
-			size_type tmpC = _capacity;
-			size_type tmpS = _size;
-			pointer tmpD = _data;
-			_allocator = obj._allocator;
-			_capacity = obj._capacity;
-			_size = obj._size;
-			_data = obj._data;
-			obj._allocator = tmpA;
-			obj._capacity = tmpC;
-			obj._size = tmpS;
-			obj._data = tmpD;
+			std::swap(_allocator, obj._allocator);
+			std::swap(_capacity, obj._capacity);
+			std::swap(_size, obj._size);
+			std::swap(_data, obj._data);
+//			allocator_type tmpA = _allocator;
+//			size_type tmpC = _capacity;
+//			size_type tmpS = _size;
+//			pointer tmpD = _data;
+//			_allocator = obj._allocator;
+//			_capacity = obj._capacity;
+//			_size = obj._size;
+//			_data = obj._data;
+//			obj._allocator = tmpA;
+//			obj._capacity = tmpC;
+//			obj._size = tmpS;
+//			obj._data = tmpD;
 
 		}
 

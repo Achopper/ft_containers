@@ -48,10 +48,11 @@ struct pair
 
 	pair() : first(), second() {}
 	template<class T, class T1>
-	pair( const pair<T, T1>& obj) : first(obj.first), second(obj.second) {}
-	pair(const first_type &f_t, const second_type &s_t):	first(f_t), second(s_t) {}
-	pair( const pair& obj) : first(obj.first), second(obj.second) {}
-	pair& operator=(const pair& obj) { first = obj.first; second = obj.second; return *this; }
+	pair( pair<T, T1> const& obj) 							: first(obj.first), second(obj.second) {}
+	pair(const first_type &f_t, const second_type &s_t)		: first(f_t), second(s_t) {}
+	pair( pair const&  obj) 								: first(obj.first), second(obj.second) {}
+	pair& operator=(const pair& obj)
+			{ first = obj.first; second = obj.second; return *this; }
 	~pair() {}
 };
 
@@ -86,7 +87,7 @@ struct pair
 	}
 
 template <class K, class V>
-		ft::pair< K, V> make_pair(const K key ,const V value)
+		ft::pair< K, V> make_pair(K key, V value)
 {
 	return (pair< K, V>(key, value));
 }
@@ -115,17 +116,23 @@ template <class K, class V>
 	typedef integral_constant<bool, true> true_type;
 	typedef integral_constant<bool, false> false_type ;
 
-	template<class Obj> struct is_integral				:	ft::false_type {};
-	template<> 			struct is_integral<int>			:	ft::true_type {};
-	template<> 			struct is_integral<bool>		:	ft::true_type {};
-	template<> 			struct is_integral<char>		:	ft::true_type {};
-	template<> 			struct is_integral<char16_t> 	:	ft::true_type {};
-	template<> 			struct is_integral<char32_t> 	:	ft::true_type {};
-	template<> 			struct is_integral<wchar_t> 	:	ft::true_type {};
-	template<> 			struct is_integral<short>		:	ft::true_type {};
-	template<> 			struct is_integral<long>		:	ft::true_type {};
-	template<> 			struct is_integral<long long>	:	ft::true_type {};
-	//TODO add values
+	template<class Obj> struct is_integral						:	ft::false_type{};
+	template<> 			struct is_integral<int>					:	ft::true_type {};
+	template<> 			struct is_integral<bool>				:	ft::true_type {};
+	template<> 			struct is_integral<char>				:	ft::true_type {};
+	template<> 			struct is_integral<long>				:	ft::true_type {};
+	template<> 			struct is_integral<short>				:	ft::true_type {};
+	template<> 			struct is_integral<wchar_t> 			:	ft::true_type {};
+	template<> 			struct is_integral<char16_t> 			:	ft::true_type {};
+	template<> 			struct is_integral<char32_t> 			:	ft::true_type {};
+	template<> 			struct is_integral<long long>			:	ft::true_type {};
+	template<> 			struct is_integral<signed char>			:	ft::true_type {};
+	template<> 			struct is_integral<unsigned int>		:	ft::true_type {};
+	template<> 			struct is_integral<unsigned long>		:	ft::true_type {};
+	template<> 			struct is_integral<unsigned char>		:	ft::true_type {};
+	template<> 			struct is_integral<unsigned short>		:	ft::true_type {};
+	template<> 			struct is_integral<unsigned long long>	:	ft::true_type {};
+
 
 //-------------------------------NODE---------------------------------------------------
 	template<class Data>
@@ -186,6 +193,8 @@ template <class K, class V>
 
 	struct bidirectional_iterator_tag {};
 	struct random_access_iterator_tag  : public bidirectional_iterator_tag{};
+
+
 
 template<class Iterator>
 		struct iterator_traits

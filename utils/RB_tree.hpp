@@ -662,7 +662,7 @@ namespace ft
 			return (const_iterator(_treeMin(_root)));
 		}
 
-		void swap(const RBTree &obj)
+		void swap(RBTree &obj)
 		{
 			std::swap(_root, obj._root);
 			std::swap(_nil, obj._nil);
@@ -704,7 +704,6 @@ namespace ft
 
 	};
 
-	//TODO swap
 
 }
 

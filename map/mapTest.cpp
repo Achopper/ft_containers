@@ -182,7 +182,8 @@ ft::vector<int> assign_overload_test(ft::map<T, V> mp) {
 	ft::map<T, V> mp2;
 	for (int i = 2 * _ratio, j = 2; i < 4 * _ratio; ++i, ++j)
 		mp2.insert(ft::make_pair(i, j));
-	mp2 = mp;
+	//mp2 = mp;
+	mp2.swap(mp);
 	//mp2.printTree();
 	typename ft::map<T, V>::iterator it = mp2.begin();
 	for (; it != mp2.end(); ++it) {
@@ -207,6 +208,7 @@ void test(ft::map<T,V> mp)
 		v.push_back(it->first);
 	for (const auto &i : v)
 		std::cout << i << " ";
+
 }
 
 template <class T, class V>
@@ -321,38 +323,139 @@ ft::vector<int> erase_test_3(ft::map<T, V> mp) {
 }
 
 template <class T, class V>
-std::vector<int> erase_test_31(std::map<T, V> mp) {
-	std::vector<int> v;
-	for (int i = 0, j = 0; i < 100 * _ratio; ++i, ++j)
-		mp.insert(std::make_pair(i, j));
-
-
-	mp.erase(mp.begin(), --mp.end());
-
-	v.push_back(mp.begin()->first);
-	for (const auto &i : v)
-		std::cout << i << " ";
-	std::cout << std::endl;
+ft::vector<int> swap_test(ft::map<T, V> mp) {
+	ft::vector<int> v;
+	for (int i = 0, j = 0; i < 25 * _ratio; ++i, ++j)
+		mp.insert(ft::make_pair(i, j));
+	ft::map<T, V> mp2;
+	for (int i = 25 * _ratio, j = 0; i < 35 * _ratio; ++i, --j)
+		mp.insert(ft::make_pair(i, j));
+	long *adr1 = reinterpret_cast<long *>(&mp);
+	long *adr2 = reinterpret_cast<long *>(&mp2);
+	mp.swap(mp2);
+	if (reinterpret_cast<long *>(&mp) == adr1 && reinterpret_cast<long *>(&mp2) == adr2)
+		v.push_back(1);
+	v.push_back(mp2.size());
+	typename ft::map<T, V>::iterator it = mp2.begin();
+	for (; it != mp2.end(); ++it) {
+		v.push_back(it->first);
+		v.push_back(it->second);
+	}
+	std::swap(mp, mp2);
+	typename ft::map<T, V>::iterator it2 = mp2.begin();
+	for (; it2 != mp2.end(); ++it2) {
+		v.push_back(it2->first);
+		v.push_back(it2->second);
+	}
 	return v;
 }
 
+template <class T, class V>
+ft::vector<int> equal_range_test(ft::map<T, V> mp) {
+	ft::vector<int> v;
+	mp.insert(ft::make_pair(10, 10));
+	mp.insert(ft::make_pair(20, 20));
+	mp.insert(ft::make_pair(30, 30));
+	mp.insert(ft::make_pair(40, 40));
+	mp.insert(ft::make_pair(50, 50));
+	mp.insert(ft::make_pair(60, 60));
+	const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair = mp.equal_range(10);
+	const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair2 = mp.equal_range(11);
+	const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair3 = mp.equal_range(1);
+	v.push_back(pair.first->first);
+	v.push_back(pair.first->second);
+	v.push_back(pair.second->first);
+	v.push_back(pair.second->second);
+	v.push_back(pair2.first->first);
+	v.push_back(pair2.first->second);
+	v.push_back(pair2.second->first);
+	v.push_back(pair2.second->second);
+	v.push_back(pair3.first->first);
+	v.push_back(pair3.first->second);
+	v.push_back(pair3.second->first);
+	v.push_back(pair3.second->second);
+	return v;
+}
 
+int relationn_test ()
+{
+	std::map<char,int> foo,bar;
+	foo['a']=100;
+	foo['b']=200;
+	bar['a']=10;
+	bar['z']=1000;
+
+	// foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+	if (foo==bar) std::cout << "foo and bar are equal\n";
+	if (foo!=bar) std::cout << "foo and bar are not equal\n";
+	if (foo< bar) std::cout << "foo is less than bar\n";
+	if (foo> bar) std::cout << "foo is greater than bar\n";
+	if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+	if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+}
+
+bool iterator_traits_test() {
+	ft::vector<std::string> res;
+	ft::vector<std::string> res2;
+
+
+	res.push_back(typeid(ft::vector<int>::iterator::iterator_category).name());
+	res.push_back(typeid(ft::vector<int>::iterator::value_type).name());
+	res.push_back(typeid(ft::vector<int>::iterator::difference_type).name());
+	res.push_back(typeid(ft::vector<int>::iterator::iterator_type).name());
+	res.push_back(typeid(ft::vector<int>::iterator::pointer).name());
+	res.push_back(typeid(ft::vector<int>::iterator::reference).name());
+	res.push_back(typeid(ft::vector<int>::reverse_iterator::iterator_category).name());
+	res.push_back(typeid(ft::vector<int>::reverse_iterator::value_type).name());
+	res.push_back(typeid(ft::vector<int>::reverse_iterator::difference_type).name());
+	res.push_back(typeid(ft::vector<int>::reverse_iterator::pointer).name());
+	res.push_back(typeid(ft::vector<int>::reverse_iterator::reference).name());
+
+	res2.push_back(typeid(std::vector<int>::iterator::iterator_category).name());
+	res2.push_back(typeid(std::vector<int>::iterator::value_type).name());
+	res2.push_back(typeid(std::vector<int>::iterator::difference_type).name());
+	res2.push_back(typeid(std::vector<int>::iterator::iterator_type).name());
+	res2.push_back(typeid(std::vector<int>::iterator::pointer).name());
+	res2.push_back(typeid(std::vector<int>::iterator::reference).name());
+	res2.push_back(typeid(std::vector<int>::reverse_iterator::iterator_category).name());
+	res2.push_back(typeid(std::vector<int>::reverse_iterator::value_type).name());
+	res2.push_back(typeid(std::vector<int>::reverse_iterator::difference_type).name());
+	res2.push_back(typeid(std::vector<int>::reverse_iterator::pointer).name());
+	res2.push_back(typeid(std::vector<int>::reverse_iterator::reference).name());
+	std::cout << "ft" << std::endl;
+	for (const auto &i : res)
+	{
+		std::cout << i << " ";
+	}
+	std::cout <<  std::endl;
+	std::cout << "std" << std::endl;
+	for (const auto &i : res2)
+	{
+		std::cout << i << " ";
+	}
+	std::cout <<  std::endl;
+	return res == res2;
+}
 
 int main ()
 {
 	ft::map<int ,int> a;
 	std::map<int, int> s;
-	//test(a);
-	//assign_overload_test(a);
-	//assign_overload_test1(s);
+//	test(a);
+//	assign_overload_test(a);
 //	iterators_test(a);
 //	reverse_iterators_test_std(a);
-	comparator_test(a);
+//	comparator_test(a);
 //	insert_test_3(a);
 //	clear_test(a);
 //	erase_test_1(a);
 //	erase_test_2(a);
-	erase_test_3(a);
-//	erase_test_31(s);
+//	erase_test_3(a);
+//	swap_test(a);
+//	equal_range_test(a);
+//	relationn_test();
+iterator_traits_test();
+
 
 }
