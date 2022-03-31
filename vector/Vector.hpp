@@ -33,7 +33,7 @@ namespace ft
 		typedef const value_type&					const_reference;
 		typedef  random_access_iterator<value_type> iterator;
 		typedef  random_access_iterator<value_type> const_iterator;
-		typedef ft::reverse_iterator<iterator> 		reverse_iterator; //TODO make rev_it
+		typedef ft::reverse_iterator<iterator> 		reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	private:
@@ -74,9 +74,9 @@ namespace ft
 		vector (InputIterator first, InputIterator last,
 				const allocator_type& alloc = allocator_type()
 						,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) :
-						_allocator(alloc),
 						_size(0),
-						_capacity(0)
+						_capacity(0),
+						_allocator(alloc)
 		{
 			if (first > last)
 				throw (std::length_error("Vector"));
@@ -188,25 +188,37 @@ namespace ft
 			return (_size == 0);
 		}
 
+		pointer data()
+		{
+			return (_data);
+		}
+
 		void reserve(size_type n)
 		{
+			pointer newData;
+			size_type size;
 			if (_capacity <= n)
 			{
 				if (n > max_size())
 					throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
-				vector<value_type> tmp(0);
 				try
 				{
-					tmp._data = tmp._allocator.allocate(n);
+					 newData = _allocator.allocate(n);
 				} catch (std::bad_alloc &ex)
 				{
 					std::cout << ex.what();
 				}
-				tmp._capacity = n;
 				for (size_type i = 0; i < _size; ++i)
-					_allocator.construct(tmp._data + i, _data[i]);
-				tmp._size = _size;
-				swap(tmp);
+				{
+					_allocator.construct(newData + i, _data[i]);
+					_allocator.destroy(_data + i);
+				}
+				if (_data)
+					_allocator.deallocate(_data, _capacity);
+				_capacity = n;
+				size = _size;
+				_data = newData;
+				_size = size;
 			}
 		}
 
@@ -226,7 +238,7 @@ namespace ft
 				{
 					try
 					{
-						reserve(_capacity << 1 > n ? _capacity << 1 : n); //TODO ? 2 || 1
+						reserve(_capacity << 1 > n ? _capacity << 1 : n);
 					} catch (std::exception &ex)
 					{
 						std::cout << ex.what() << std::endl;
@@ -465,7 +477,7 @@ namespace ft
 					}
 					for (difference_type i = 0; i < start; ++i)
 						_allocator.construct(newPtr + i, _data[i]);
-					for (difference_type i = start; i <= (start + count); ++i, first++)
+					for (difference_type i = start; i <= (start + count - 1); ++i, first++)
 						_allocator.construct(newPtr + i, *first);
 					for (difference_type i = start + count; i < static_cast<difference_type>(_size) + count; ++i)
 						_allocator.construct(newPtr + i, _data[i - count]);

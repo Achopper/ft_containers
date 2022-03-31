@@ -57,8 +57,23 @@ namespace ft
 		_comp(value_compare()),
 		_size(0)
 		{
-			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, _makeValue());
+			node_pointer newNode;
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			}catch (...)
+			{
+				throw;
+			}
+			try
+			{
+				_nodeAllocator.construct(newNode, _makeValue());
+			}catch (...)
+			{
+				_nodeAllocator.deallocate(newNode,1);
+				throw;
+			}
+
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -72,8 +87,22 @@ namespace ft
 		_comp(comp),
 		_size(0)
 		{
-			node_pointer newNode = _nodeAllocator.allocate(1);
+			node_pointer newNode;
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			} catch (...)
+			{
+				throw;
+			}
+			try
+			{
 			_nodeAllocator.construct(newNode, _makeValue());
+			} catch (...)
+			{
+				_nodeAllocator.deallocate(newNode,1);
+				throw;
+			}
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -91,10 +120,22 @@ namespace ft
 			_comp(comp),
 			_size(0)
 		{
-//			if (&first > &last)
-//				throw std::logic_error("");
-			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode,  _makeValue());
+			node_pointer newNode;
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			} catch (...)
+			{
+				throw;
+			}
+			try
+			{
+				_nodeAllocator.construct(newNode, _makeValue());
+			} catch (...)
+			{
+				_nodeAllocator.deallocate(newNode,1);
+				throw;
+			}
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -130,8 +171,22 @@ namespace ft
 			_nodeAllocator = obj._nodeAllocator;
 			_valAllocator = obj._valAllocator;
 			_comp = obj._comp;
-			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, _makeValue());
+			node_pointer newNode;
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			} catch (...)
+			{
+				throw;
+			}
+			try
+			{
+				_nodeAllocator.construct(newNode, _makeValue());
+			} catch (...)
+			{
+				_nodeAllocator.deallocate(newNode,1);
+				throw;
+			}
 			_nil = newNode;
 			_nil->isNil = true;
 			_nil->color = 'B';
@@ -206,7 +261,6 @@ namespace ft
 
 		node_pointer _treeMin(node_pointer root) const
 		{
-
 			while (root != _nil &&  root->left != _nil)
 				root = root->left;
 			return root;
@@ -223,8 +277,8 @@ namespace ft
 		{
 			if (root == _nil)
 				return (_nil);
-			if (root->value->first == val.first)
-				return (root);
+//			if (root->value->first == val.first)
+//				return (root);
 			if (_comp(val, *(root->value)))
 				return _findKey(root->left, val);
 			else if (_comp(*(root->value), val))
@@ -510,12 +564,27 @@ namespace ft
 		node_pointer insert(const value_type &val)
 		{
 			node_pointer find;
+			node_pointer newNode;
+
 			if ((find = _findKey(_root, val)) != _nil)
 			{
 				return (find);
 			}
-			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, node(_makeValue(val)));
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			}catch (...)
+			{
+				throw;
+			}
+			try
+			{
+				_nodeAllocator.construct(newNode, node(_makeValue(val)));
+			}catch (...)
+			{
+				_nodeAllocator.deallocate(newNode, 1);
+				throw;
+			}
 			newNode->left = _nil;
 			newNode->right = _nil;
 			newNode->parent = _nil;
@@ -532,8 +601,22 @@ namespace ft
 		iterator insert(iterator position, const value_type &val)
 		{
 			node_pointer pos = find(*position.base()->value);
-			node_pointer newNode = _nodeAllocator.allocate(1);
-			_nodeAllocator.construct(newNode, node(_makeValue(val)));
+			node_pointer newNode;
+			try
+			{
+				newNode = _nodeAllocator.allocate(1);
+			}catch (...)
+			{
+				throw;
+			}
+			try
+			{
+				_nodeAllocator.construct(newNode, node(_makeValue(val)));
+			}catch (...)
+			{
+				_nodeAllocator.deallocate(newNode, 1);
+				throw;
+			}
 			newNode->left = _nil;
 			newNode->right = _nil;
 			newNode->parent = _nil;
@@ -672,23 +755,6 @@ namespace ft
 			std::swap(_size, obj._size);
 		}
 
-
-		//TODO del
-		void print_tree()
-		{
-			inorderPrint(_root);
-			std::cout << std::endl;
-			std::cout << "min " << _treeMin(_root)->value->first << " | max " << _treeMax(_root)->value->first
-					<< std::endl;
-			//std::cout << "min " << _nil->left->value->first << " | max " << _nil->right->value->first << std::endl;
-			std::cout << "size is " << size() << std::endl;
-			std::cout << "max size is " << max_size() << std::endl;
-			ft::pair<int, int> x = ft::make_pair(27, 27);
-		//	node_pointer prev = findPrev(x);
-		//	std::cout << "lower " << prev->value->first << " " << prev->value->second << std::endl;
-		//	node_pointer next = findNext(x);
-		//	std::cout << "upper " << next->value->first << " " << next->value->second << std::endl;
-		}
 
 		void inorderPrint(node_pointer root)
 		{

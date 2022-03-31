@@ -12,6 +12,8 @@
 
 #include "stack.hpp"
 #include <stack>
+#include "../vector/Vector.hpp"
+#include <vector>
 
 void separator(std::string sep)
 {

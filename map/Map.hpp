@@ -24,17 +24,12 @@ namespace ft
 	class map
 	{
 	public:
-		typedef Key key_type;
-		typedef T mapped_type;
-		typedef ft::pair<const key_type, mapped_type> value_type;
-		typedef Compare key_compare;
-		typedef Allocator allocator_type;
-		typedef value_type &reference;
-		typedef const value_type &const_reference;
-		typedef typename allocator_type::pointer pointer;
-		typedef typename allocator_type::const_pointer const_pointer;
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
+		typedef Key														key_type;
+		typedef T 														mapped_type;
+		typedef ft::pair<const key_type, mapped_type> 					value_type;
+		typedef Compare 												key_compare;
+		typedef Allocator 												allocator_type;
+		typedef std::size_t 											size_type;
 
 
 		class value_compare
@@ -57,7 +52,6 @@ namespace ft
 		typedef typename tree::iterator iterator;
 		typedef typename tree::const_iterator const_iterator;
 		typedef typename tree::reverse_iterator reverse_iterator;
-		typedef typename tree::const_reverse_iterator const_reverse_iterator;
 
 	private:
 
@@ -86,11 +80,6 @@ namespace ft
 				_comp(comp),
 				_alloc(alloc)
 		{
-//			while (first != last)
-//			{
-//				_mapTree.insert(*first);
-//				++first;
-//			}
 		}
 
 		map(const map &x) :
@@ -267,12 +256,12 @@ namespace ft
 			}
 		}
 
-		//TODO del
 
-		void printTree()
-		{
-			_mapTree.print_tree();
-		}
+//
+//		void printTree()
+//		{
+//			_mapTree.print_tree();
+//		}
 
 	};
 
