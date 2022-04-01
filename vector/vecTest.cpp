@@ -140,7 +140,7 @@ ft::vector<int> insert_test_3(ft::vector<T> vector) {
 	ft::vector<int> tmp;
 	tmp.assign(26 * 1, 1);
 	vector.assign(42 * 1, 1);
-	vector.insert(vector.end() - 1 * 1, tmp.begin(), tmp.end());
+	vector.insert(vector.end() - 1 , tmp.begin(), tmp.end());
 	v.push_back(vector[3]);
 	v.push_back(vector.size());
 	v.push_back(vector.capacity());

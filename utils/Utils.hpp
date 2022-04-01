@@ -23,18 +23,6 @@
 
 namespace ft {
 
-	template <class Arg1, class Arg2, class Result>
-	struct binary_function
-	{
-		/* The first argument type */
-		typedef Arg1 first_argument_type;
-
-		/* The second arguement type */
-		typedef Arg2 second_argument_type;
-
-		/* The result type */
-		typedef Result result_type;
-	};
 
 //------------------------PAIR--------------------------------------
 
@@ -147,10 +135,17 @@ template <class K, class V>
 		bool 					isNil;
 		char					color;
 
-		//Node() : value(value_type()), color(0) {}
 
-		Node(Data *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), nil(NULL), isNil(false), color
-		('B') {}
+		Node(value_type *val = NULL)
+		:
+		value(val),
+		left(NULL),
+		right(NULL),
+		parent(NULL),
+		nil(NULL),
+		isNil(false),
+		color('B')
+		{}
 
 		Node(Node *l, Node *r, Node *p, Node *nil, char col, const value_type &val)
 				:
