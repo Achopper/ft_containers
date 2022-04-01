@@ -15,6 +15,21 @@
 #include <set>
 
 
+class A
+{
+public:
+	int a;
+	A()
+	{
+		a = 1;
+		throw 1;
+	}
+	bool operator <(const A &a) const
+	{
+		return (this->a < a.a);
+	}
+};
+
 template <class T>
 void test(ft::set<T> s)
 {
@@ -35,6 +50,12 @@ void test(ft::set<T> s)
 
 int main ()
 {
+	try
+	{
+		ft::set<const A> b;
+	}
+	catch (...){}
+	//std::set<A> b;
 	ft::set<int> a;
 	test(a);
 }

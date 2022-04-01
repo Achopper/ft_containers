@@ -61,7 +61,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			}catch (...)
+			}catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -91,7 +91,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			} catch (...)
+			} catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -124,7 +124,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			} catch (...)
+			} catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -175,7 +175,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			} catch (...)
+			} catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -573,7 +573,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			}catch (...)
+			}catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -605,7 +605,7 @@ namespace ft
 			try
 			{
 				newNode = _nodeAllocator.allocate(1);
-			}catch (...)
+			}catch (std::bad_alloc &ex)
 			{
 				throw;
 			}
@@ -765,11 +765,8 @@ namespace ft
 			root->color == 'B' ? std::cout << GREENCOL : std::cout << REDCOL;
 			std::cout << "<" << root->value->first << " " << root->value->second << ">" << " " << RESCOL;
 			inorderPrint(root->right);
-
 		}
-
 	};
-
 
 }
 

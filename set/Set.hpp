@@ -23,25 +23,20 @@ namespace ft
 	class set
 	{
 	public:
-		typedef std::size_t size_type;
-		typedef Compare key_compare;
-		typedef key_compare value_compare;
-		typedef Key value_type;
-		typedef Allocator allocator_type;
-		typedef RBTree<value_type, key_compare, allocator_type> tree;
-		typedef typename tree::iterator iterator;
-		typedef typename tree::const_iterator const_iterator;
-		typedef typename tree::reverse_iterator reverse_iterator;
-
-
+		typedef std::size_t 											size_type;
+		typedef Compare 												key_compare;
+		typedef key_compare 											value_compare;
+		typedef Key 													value_type;
+		typedef Allocator 												allocator_type;
+		typedef RBTree<value_type, key_compare , allocator_type> 		tree;
+		typedef typename tree::iterator 								iterator;
+		typedef typename tree::const_iterator 							const_iterator;
+		typedef typename tree::reverse_iterator 						reverse_iterator;
 
 	private:
-
 		tree _setTree;
 		key_compare _comp;
 		allocator_type _alloc;
-
-
 	public:
 
 		set(const key_compare &comp = key_compare(),

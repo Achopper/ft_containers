@@ -15,20 +15,8 @@
 #include <map>
 #include <vector>
 
-#define _ratio 1000
+#define _ratio 10000
 
-//template <class T, class V, class C>
-//void fillMap(std::map<T, V, C> &mp) {
-//	mp.insert(std::make_pair(16, 3));
-//	mp.insert(std::make_pair(8, 3));
-//	mp.insert(std::make_pair(23, 3));
-//	mp.insert(std::make_pair(7, 3));
-//	mp.insert(std::make_pair(19, 3));
-//	mp.insert(std::make_pair(29, 3));
-//	mp.insert(std::make_pair(41, 3));
-//	mp.insert(std::make_pair(4, 3));
-//	mp.insert(std::make_pair(11, 3));
-//}
 
 template <class T, class V, class C>
 void fillMap(ft::map<T, V, C> &mp) {
@@ -377,7 +365,7 @@ ft::vector<int> equal_range_test(ft::map<T, V> mp) {
 	return v;
 }
 
-int relationn_test ()
+void relationn_test ()
 {
 	std::map<char,int> foo,bar;
 	foo['a']=100;
@@ -392,7 +380,6 @@ int relationn_test ()
 	if (foo> bar) std::cout << "foo is greater than bar\n";
 	if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 	if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
-
 }
 
 bool iterator_traits_test() {
@@ -443,7 +430,7 @@ int main ()
 	ft::map<int ,int> a;
 	std::map<int, int> s;
 //	test(a);
-//	assign_overload_test(a);
+	assign_overload_test(a);
 //	iterators_test(a);
 //	reverse_iterators_test_std(a);
 //	comparator_test(a);
@@ -455,7 +442,7 @@ int main ()
 //	swap_test(a);
 //	equal_range_test(a);
 //	relationn_test();
-iterator_traits_test();
+//	iterator_traits_test();
 
 
 }

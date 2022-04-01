@@ -35,7 +35,7 @@ namespace ft
 		class value_compare
 		{
 		private:
-			key_compare _comp;
+			key_compare 							 _comp;
 		public:
 			value_compare(const key_compare &comp) : _comp(comp)
 			{}
@@ -256,8 +256,6 @@ namespace ft
 			}
 		}
 
-
-//
 //		void printTree()
 //		{
 //			_mapTree.print_tree();

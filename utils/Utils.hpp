@@ -135,10 +135,17 @@ template <class K, class V>
 		bool 					isNil;
 		char					color;
 
-		//Node() : value(value_type()), color(0) {}
 
-		Node(value_type *val = NULL) : value(val), left(NULL), right(NULL), parent(NULL), nil(NULL), isNil(false), color
-		('B') {}
+		Node(value_type *val = NULL)
+		:
+		value(val),
+		left(NULL),
+		right(NULL),
+		parent(NULL),
+		nil(NULL),
+		isNil(false),
+		color('B')
+		{}
 
 		Node(Node *l, Node *r, Node *p, Node *nil, char col, const value_type &val)
 				:

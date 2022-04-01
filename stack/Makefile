@@ -2,8 +2,8 @@ NAME = stackTest.cpp
 
 all:
 	sed 's/ft/std/g' $(NAME) > std_$(NAME)
-	clang++ -Wall -Wextra -Werror stackTest.cpp -fsanitize=address -o my.out
-	clang++ -Wall -Wextra -Werror std_stackTest.cpp -fsanitize=address -o std.out
+	clang++ -Wall -Wextra -Werror stackTest.cpp  -o my.out
+	clang++ -Wall -Wextra -Werror std_stackTest.cpp -o std.out
 
 test: all
 	@echo "STD"
