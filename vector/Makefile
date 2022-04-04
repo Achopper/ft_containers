@@ -2,8 +2,8 @@ NAME = vecTest.cpp
 
 all:
 	sed 's/ft::/std::/g' $(NAME) > std_$(NAME)
-	clang++ -std=c++11 -Wall -Wextra  vecTest.cpp  -o my.out
-	clang++ -std=c++11 -Wall -Wextra  std_vecTest.cpp  -o std.out
+	clang++ -std=c++98 -Wall -Wextra  vecTest.cpp  -o my.out
+	clang++ -std=c++98 -Wall -Wextra  std_vecTest.cpp  -o std.out
 
 test: all
 	@echo "STD"
