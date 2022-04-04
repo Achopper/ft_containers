@@ -2,8 +2,8 @@ NAME = setTest.cpp
 
 all:
 	sed 's/ft::/std::/g' $(NAME) > std_$(NAME)
-	clang++  -std=c++11 -Wall -Wextra -Werror  setTest.cpp  -o my.out
-	clang++  -std=c++11 -Wall -Wextra -Werror std_setTest.cpp  -o std.out
+	clang++  -std=c++98 -Wall -Wextra -Werror  setTest.cpp  -o my.out
+	clang++  -std=c++98 -Wall -Wextra -Werror std_setTest.cpp  -o std.out
 
 test: all
 	@echo "STD"

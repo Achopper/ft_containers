@@ -65,6 +65,7 @@ namespace ft
 			} catch (std::bad_alloc &ex)
 			{
 				std::cout << ex.what();
+				throw;
 			}
 			for (size_type i = 0; i < n; ++i)
 				_allocator.construct(_data + i, val);
@@ -120,6 +121,7 @@ namespace ft
 				} catch (std::bad_alloc &ex)
 				{
 					std::cout << ex.what();
+					throw;
 				}
 			}
 			for (size_type i = 0; i < _size; ++i)
@@ -207,6 +209,7 @@ namespace ft
 				} catch (std::bad_alloc &ex)
 				{
 					std::cout << ex.what();
+					throw;
 				}
 				for (size_type i = 0; i < _size; ++i)
 				{
@@ -310,6 +313,7 @@ namespace ft
 				} catch (std::exception &ex)
 				{
 					std::cout << ex.what() << std::endl;
+					throw;
 				}
 			}
 			_allocator.construct(_data + _size, val);
@@ -417,6 +421,7 @@ namespace ft
 					catch (std::bad_alloc &ex)
 					{
 						std::cout << ex.what();
+						throw;
 					}
 					for (; i < start; ++i)
 						_allocator.construct(newPtr + i, _data[i]);
@@ -474,6 +479,7 @@ namespace ft
 					catch (std::bad_alloc &ex)
 					{
 						std::cout << "bad alloc in vector insert" << std::endl;
+						throw;
 					}
 					for (difference_type i = 0; i < start; ++i)
 						_allocator.construct(newPtr + i, _data[i]);
@@ -549,6 +555,7 @@ namespace ft
 				catch (std::bad_alloc &ex)
 				{
 					std::cout << ex.what() << std::endl;
+					throw;
 				}
 				_size = count;
 				_capacity = count;

@@ -100,7 +100,7 @@ ft::vector<int> swap_test(ft::vector<T> vector) {
 
 
 template <typename T>
-ft::vector<T> insert_test_1(ft::vector<T> vector) {
+ft::vector<int> insert_test_1(ft::vector<T> &vector) {
 	ft::vector<int> v;
 	vector.assign(2 * 1, 1);
 
@@ -644,9 +644,10 @@ int main()
 	revIterTest();
 
 	ft::vector<int> k;
-	insert_test_1(k);
+	insert_test_1<int>(k);
 	ft::vector<int> kk;
-	insert_test_3(kk);
+
+	insert_test_3<int>(kk);
 	swap_test(k);
 	std::vector<int> v;
 	return (0);
